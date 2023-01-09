@@ -12,6 +12,7 @@ import ExternalProdReducer from './ExternalProdReducer';
 import TechnologyMasterReducer from './TechnologyMasterReducer';
 import AccountReducer from './AccountReducer';
 import ReasonReducer from './ReasonReducer';
+import PurchaseOrderReducer from './PurchaseOrderReducer';
 
 const rootReducer = combineReducers({
   loginReducer: loginReducer,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   ExternalProdReducer: ExternalProdReducer,
   TechnologyMasterReducer: TechnologyMasterReducer,
   AccountReducer: AccountReducer,
-  ReasonReducer: ReasonReducer
+  ReasonReducer: ReasonReducer,
+  PurchaseOrderReducer: PurchaseOrderReducer
 });
 export default rootReducer;
