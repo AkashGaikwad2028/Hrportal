@@ -12,25 +12,24 @@ const PDFExample = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        <Pdf
-          trustAllCerts={false}
-          source={source}
-          onLoadComplete={(numberOfPages, filePath) => {
+    <View style={styles.container}>
+    <Pdf
+     trustAllcerts={false}
+        source={source}
+        onLoadComplete={(numberOfPages,filePath) => {
             console.log(`Number of pages: ${numberOfPages}`);
-          }}
-          onPageChanged={(page, numberOfPages) => {
+        }}
+        onPageChanged={(page,numberOfPages) => {
             console.log(`Current page: ${page}`);
-          }}
-          onError={error => {
+        }}
+        onError={(error) => {
             console.log(error);
-          }}
-          onPressLink={uri => {
-            console.log(`Link pressed:${uri}`);
-          }}
-          style={styles.pdf}
-        />
-      </View>
+        }}
+        onPressLink={(uri) => {
+            console.log(`Link pressed: ${uri}`);
+        }}
+        style={styles.pdf}/>
+</View>
     </SafeAreaView>
     // <View><Text>Hello Modal</Text></View>
   );
