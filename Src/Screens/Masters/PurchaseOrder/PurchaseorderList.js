@@ -1,14 +1,34 @@
-import React from 'react';
-import { FlatList, View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, View, Text, StyleSheet,Dimensions,Modal } from 'react-native';
 import {GLOBALSTYLE} from "../../../Constants/Styles"
 import { COLORS } from '../../../Constants/Theme';
 import SmallButton from "../../../Components/SmallButton"
-import EvilIcons from "react-native-vector-icons/EvilIcons"
+import ViewPdf from './EditpurchaseOrder/EditPurchaseOrder.js/ViewPdf';
+import PDFExample from './PDFExample';
+// import PDFExample from './PDFExample';
 
-function PurchaseOrderList({ data }) {
+
+function PurchaseOrderList({ data}) {
+  const [modalVisible, setModalVisible] = useState(false);
+ const [PdfData,setPdfData]=useState('')
+ 
+
   const _renderItem = ({ item }) => {
     console.log("item-----------",item)
     return (
+      <>
+      <Modal
+animationType="slide"
+transparent={true}
+visible={modalVisible}
+onRequestClose={() => {
+  Alert.alert("Modal has been closed.");
+  setModalVisible(!modalVisible);}}
+>
+<PDFExample
+// pdfData={PdfData}
+/>
+</Modal>
       <View style={[GLOBALSTYLE.cardView]}>
           <View style={GLOBALSTYLE.rowView}>
         {item.clients.client_name && ( 
@@ -35,8 +55,13 @@ function PurchaseOrderList({ data }) {
 
            {item.pdf_file && ( <View style={GLOBALSTYLE.columnView}>
             <Text style={GLOBALSTYLE.label}>Pdf File</Text>
-            <EvilIcons  color="red" size={25}/>
-          </View>
+          <Text  onPress={() =>
+            {
+              setModalVisible(true)
+            }
+          }
+            >View</Text>
+         </View>
           )}
         </View>
         <View style={GLOBALSTYLE.rowView}>
@@ -67,6 +92,7 @@ function PurchaseOrderList({ data }) {
           </View>
         </View>
       </View>
+      </>
     );
   };
 
@@ -75,6 +101,7 @@ function PurchaseOrderList({ data }) {
       <FlatList
         data={data}
         renderItem={_renderItem}
+        keyExtractor={item => item.id}
       />
     </View>
   );
@@ -115,4 +142,11 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: 14,
   },
+  pdf: {
+    flex:1,
+    width:Dimensions.get('window').width,
+    height:Dimensions.get('window').height,
+}
 });
+
+// setPdfData(item.pdf_file);

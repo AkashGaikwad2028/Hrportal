@@ -12,12 +12,13 @@ import { ActivityIndicator } from "react-native";
 import PurchaseOrderList from "./PurchaseorderList";
 import SearchBox from "../../../Components/SearchBox";
 
+
 const PurchaseOrder = ({ navigation }) => {
     const dispatch = useDispatch();
     const reducerData = useSelector(state => state.PurchaseOrderReducer)
 console.log("reducerdatap----",reducerData.purchaseorderData)
 
-    const [purchaseOrder, setpurchaseOrder] = useState([]);
+    const [purchaseOrder, setpurchaseOrder] = useState(null);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
@@ -44,6 +45,7 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
     useEffect(() => {
         console.log("-------------------",reducerData.purchaseorderData)
        setpurchaseOrder(reducerData.purchaseorderData)
+       setFilterPurchaseData(reducerData.purchaseorderData)
     }, [reducerData.purchaseorderData])
 
     useEffect(() => {
@@ -53,28 +55,42 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
 
     const getPurchaseOrderFilterData = () => {
         const filterValue = purchaseOrder?.filter(data => {
-            console.log("data-----------",data)
-          if (search.length === 0) {
+            if (search.length === 0) {
             return data;
           } 
-         else if (  data.order_number.includes(search))
+         else if (
+            (data.clients !== null ) &&
+            (data.resources[0] !==undefined )
+           )
          {
-          return data
+           if(
+            data.clients.client_name.includes(search)||
+            data.resources[0].fname.toLowerCase().includes(search.toLowerCase())||
+             data.resources[0].lname.toLowerCase().includes(search.toLowerCase())||
+             data.order_number.includes(search)
+           )
+           return data
          }
         });
         setFilterPurchaseData(filterValue);
       }
+      
     const setSearchValue = value => {
         setSearch(value);
       };
 
-    console.log("purchase----",purchaseOrder)
+      // const ViewPdf=()=>{
+      //   console.log("viewpdfpresss")
+      //   navigation.navigate('ViewPdf')
+      // }
+
+    console.log("purchase----",purchaseOrder) 
     return (
         <View style={styles.container}>
       <SearchBox
        setSearchValue={setSearchValue}
       />
-      {/* {loading && (
+       {/* {loading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.blue} />
         </View>
@@ -84,17 +100,18 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
         <View style={styles.loadingContainer}>
           <Text> Something Went Wrong</Text>
         </View>
-      )}
+      )} */}
 
-      {!loading && purchaseOrder &&purchaseOrder.length === 0 && (
+      {/* { search && (
         <View style={styles.loadingContainer}>
           <Text> purchase order Information is not found </Text>
-        </View> */}
-      {/* )} */}
-      { purchaseOrder && (
+        </View> 
+     )}  */}
+      {purchaseOrder && purchaseOrder.length>0 && (
        <View style={styles.listContainer}>
           <PurchaseOrderList
             data={filterPurchaseData}
+          //  ViewPdf={ViewPdf}
           />
         </View>
      )}
