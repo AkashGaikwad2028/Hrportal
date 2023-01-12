@@ -1,34 +1,66 @@
 import React, { useState } from 'react';
-import { FlatList, View, Text, StyleSheet,Dimensions,Modal } from 'react-native';
+import { FlatList, View, Text, StyleSheet,Dimensions,Alert,Linking } from 'react-native';
 import {GLOBALSTYLE} from "../../../Constants/Styles"
 import { COLORS } from '../../../Constants/Theme';
 import SmallButton from "../../../Components/SmallButton"
-import ViewPdf from './EditpurchaseOrder/EditPurchaseOrder.js/ViewPdf';
-import PDFExample from './PDFExample';
-// import PDFExample from './PDFExample';
+import ViewPdf from './ViewPdf';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 
 function PurchaseOrderList({ data}) {
   const [modalVisible, setModalVisible] = useState(false);
- const [PdfData,setPdfData]=useState('')
+  const [PdfData,setPdfData]=useState('')
+  console.log('modalVisible',modalVisible)
  
+  const onPressPurchaseOrder = url => {
+    if (url === null || url === undefined) {
+      Alert.alert(' ', 'Unable to download the document', [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ]);
+      return;
+    }
+    Alert.alert('Download', 'Please download document here', [
+      {
+        text: 'Yes, Download',
+        onPress: () => {
+          Linking.canOpenURL(url).then(supported => {
+            console.log(supported);
+            if (supported) {
+              Linking.openURL(url);
+            } else {
+              // console.log("Don't know how to open URI: " + getDownloadLinkSuccess.downloadLink);
+            }
+          });
+        },
+      },
+      {
+        style: 'cancel',
+        text: 'No',
+      },
+    ]);
+  };
 
   const _renderItem = ({ item }) => {
     console.log("item-----------",item)
     return (
       <>
+      {/* <SafeAreaView style={GLOBALSTYLE.mainContainer}>
       <Modal
 animationType="slide"
-transparent={true}
+transparent={true} 
 visible={modalVisible}
 onRequestClose={() => {
   Alert.alert("Modal has been closed.");
   setModalVisible(!modalVisible);}}
 >
-<PDFExample
-// pdfData={PdfData}
-/>
-</Modal>
+<ViewPdf  pdfdata={PdfData} />
+<Text onPress={() =>( setModalVisible(false))} style={{color:"red"}}>cancel</Text>
+</Modal> */}
+{/* </SafeAreaView> */}
       <View style={[GLOBALSTYLE.cardView]}>
           <View style={GLOBALSTYLE.rowView}>
         {item.clients.client_name && ( 
@@ -55,12 +87,7 @@ onRequestClose={() => {
 
            {item.pdf_file && ( <View style={GLOBALSTYLE.columnView}>
             <Text style={GLOBALSTYLE.label}>Pdf File</Text>
-          <Text  onPress={() =>
-            {
-              setModalVisible(true)
-            }
-          }
-            >View</Text>
+            <Text  onPress={() => onPressPurchaseOrder(item.pdf_file.toString())}>View</Text>
          </View>
           )}
         </View>
