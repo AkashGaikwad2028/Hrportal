@@ -45,7 +45,7 @@ function PurchaseOrderList({ data}) {
   };
 
   const _renderItem = ({ item }) => {
-    console.log("item-----------",item)
+    console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
       {/* <SafeAreaView style={GLOBALSTYLE.mainContainer}>
@@ -62,9 +62,9 @@ onRequestClose={() => {
 </Modal> */}
 {/* </SafeAreaView> */}
       <View style={[GLOBALSTYLE.cardView]}>
-          <View style={GLOBALSTYLE.rowView}>
+          <View style={(item.resources[0].fname.length + item.resources[0].lname.length)>12 ? GLOBALSTYLE.columnView :GLOBALSTYLE.rowView }>
         {item.clients.client_name && ( 
-            <View style={GLOBALSTYLE.columnView}>
+            <View style={ GLOBALSTYLE.columnView}>
               <Text style={GLOBALSTYLE.label}>Client Name</Text>
               <Text style={GLOBALSTYLE.text}>{item.clients.client_name}</Text>
             </View>
@@ -73,9 +73,9 @@ onRequestClose={() => {
            {item.resources[0].fname && item.resources[0].lname && (
              <View style={GLOBALSTYLE.columnView}>
             <Text style={GLOBALSTYLE.label}>Resource Name</Text>
-            <Text style={GLOBALSTYLE.text}>{`${item.resources[0].fname} ${item.resources[0].lname}`}</Text>
+            <Text style={GLOBALSTYLE.text}>{`${item.resources[0].fname} ${item.resources[0].lname +','}`}</Text>
           </View>
-          )}
+         )} 
         </View>
         <View style={GLOBALSTYLE.rowView}>
         {item.order_number&& ( 
@@ -177,3 +177,4 @@ const styles = StyleSheet.create({
 });
 
 // setPdfData(item.pdf_file);
+

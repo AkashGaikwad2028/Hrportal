@@ -20,7 +20,7 @@ import ArchivedResources from '../Screens/Masters/ArchivedResources/ArchivedReso
 import InActiveResources from '../Screens/Masters/InActiveResources/InActiveResources';
 import Client from '../Screens/Masters/Client/Client';
 import ExternalProduct from '../Screens/Masters/ExternalProduct/ExternalProduct';
-import PurchaseOrder from '../Screens/Masters/PurchaseOrder/PurchaseOrder';
+// import PurchaseOrder from '../Screens/Masters/PurchaseOrder/PurchaseOrder';
 import ClientAgreement from '../Screens/Masters/ClientAgreement/ClientAgreement';
 import RequestClient from '../Screens/Masters/RequestClient/RequestClient';
 import Account from '../Screens/Masters/Account/Account';
@@ -28,6 +28,8 @@ import Technology from '../Screens/Masters/Technology/Technology';
 import UserSetting from '../Screens/Masters/UserSetting/UserSetting';
 import Setting from '../Screens/Masters/Setting/Setting';
 import Reason from '../Screens/Masters/Reason/Reason';
+import PurchaseOrder from "../Screens/Masters/PurchaseOrder/PurchaseOrder"
+import AddPurchaseorder from '../Screens/Masters/PurchaseOrder/Addpurchaseorder/AddPurchaseorder';
 import { GLOBALSTYLE } from '../Constants/Styles';
 
 const Drawer = createDrawerNavigator();
@@ -187,7 +189,18 @@ const DrawerNavigation = ({ navigation }) => {
       <Drawer.Screen
         name="Purchase Order"
         component={PurchaseOrder}
-        options={{ headerShown: true, headerTitleAlign: 'center' }}
+        options={{ headerShown: true,
+                   headerTitleAlign: 'center',
+                   headerRight: () => (
+                    <AntDesign
+                      name="plus"
+                      size={25}
+                      color="black"
+                      style={GLOBALSTYLE.headerRightStyle}
+                      onPress={() => navigation.navigate('AddPurchaseorder')}
+                    />
+                  ),
+       }}
       />
       <Drawer.Screen
         name="Client Agreement"
@@ -212,23 +225,6 @@ const DrawerNavigation = ({ navigation }) => {
               color="black"
               style={GLOBALSTYLE.headerRightStyle}
               onPress={() => navigation.navigate('AddAccount')}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Technology"
-        component={Technology}
-        options={{
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerRight: () => (
-            <AntDesign
-              name="plus"
-              size={25}
-              color="black"
-              style={GLOBALSTYLE.headerRightStyle}
-              onPress={() => navigation.navigate('AddTechnology')}
             />
           ),
         }}
@@ -259,6 +255,23 @@ const DrawerNavigation = ({ navigation }) => {
         name="Setting"
         component={Setting}
         options={{ headerShown: true, headerTitleAlign: 'center' }}
+      />
+       <Drawer.Screen
+        name="PurchaseOrder"
+        component={PurchaseOrder}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <AntDesign
+              name="plus"
+              size={25}
+              color="black"
+              style={GLOBALSTYLE.headerRightStyle}
+              onPress={() => navigation.navigate('AddPurchaseorder')}
+            />
+          ),
+        }}
       />
     </Drawer.Navigator>
   );

@@ -19,8 +19,8 @@ const PurchaseOrder = ({ navigation }) => {
 console.log("reducerdatap----",reducerData.purchaseorderData)
 
     const [purchaseOrder, setpurchaseOrder] = useState(null);
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState('');
     const [search, setSearch] = useState('');
     const [filterPurchaseData, setFilterPurchaseData] = useState(null);
 
@@ -44,6 +44,8 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
 
     useEffect(() => {
         console.log("-------------------",reducerData.purchaseorderData)
+        setLoading(false)
+        // setError(reducerData.errorPurchase)
        setpurchaseOrder(reducerData.purchaseorderData)
        setFilterPurchaseData(reducerData.purchaseorderData)
     }, [reducerData.purchaseorderData])
@@ -52,6 +54,7 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
         getPurchaseOrderFilterData();
       }, [search])
     
+      // console.log("error",error)
 
     const getPurchaseOrderFilterData = () => {
         const filterValue = purchaseOrder?.filter(data => {
@@ -90,24 +93,24 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
       <SearchBox
        setSearchValue={setSearchValue}
       />
-       {/* {loading && (
+       {loading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.blue} />
         </View>
       )}
 
-      {!loading && error (
+       {/* {!loading && error && (
         <View style={styles.loadingContainer}>
           <Text> Something Went Wrong</Text>
         </View>
-      )} */}
+      )}  */}
 
       {/* { search && (
         <View style={styles.loadingContainer}>
           <Text> purchase order Information is not found </Text>
         </View> 
      )}  */}
-      {purchaseOrder && purchaseOrder.length>0 && (
+      {!loading && purchaseOrder && purchaseOrder.length>0 && (
        <View style={styles.listContainer}>
           <PurchaseOrderList
             data={filterPurchaseData}
