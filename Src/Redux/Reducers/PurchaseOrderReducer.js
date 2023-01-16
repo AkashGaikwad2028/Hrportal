@@ -43,13 +43,13 @@ const initalState = {
           return {
             ...state,
             isLoading: false,
-            addProjectData: action.payload,
+            addPurchaseOrder: action.payload,
           };
         case  ADDPURCHASEORDER_FAIL:
           return {
             ...state,
             isLoading: false,
-            addProjectData: action.payload,
+            addPurchaseOrder: action.payload,
           };
       default:
         return state;

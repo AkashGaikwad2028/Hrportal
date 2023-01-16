@@ -16,7 +16,7 @@ import SearchBox from "../../../Components/SearchBox";
 const PurchaseOrder = ({ navigation }) => {
     const dispatch = useDispatch();
     const reducerData = useSelector(state => state.PurchaseOrderReducer)
-console.log("reducerdatap----",reducerData.purchaseorderData)
+// console.log("reducerdatap----",reducerData.purchaseorderData)
 
     const [purchaseOrder, setpurchaseOrder] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -26,11 +26,10 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
 
 
     useEffect(() => {
-        const unSubscribe = navigation.addListener('focus', () => {
+        
             dispatch(getPurchaseOrder())
-        });
-        return unSubscribe;
-    }, [navigation]);
+      
+    },[loading] );
 
     
 //   useEffect(() => {
@@ -43,7 +42,7 @@ console.log("reducerdatap----",reducerData.purchaseorderData)
 //   }, [navigation]);
 
     useEffect(() => {
-        console.log("-------------------",reducerData.purchaseorderData)
+        // console.log("-------------------",reducerData.purchaseorderData)
         setLoading(false)
         // setError(reducerData.errorPurchase)
        setpurchaseOrder(reducerData.purchaseorderData)

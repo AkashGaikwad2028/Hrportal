@@ -45,7 +45,7 @@ function PurchaseOrderList({ data}) {
   };
 
   const _renderItem = ({ item }) => {
-    console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
+    // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
       {/* <SafeAreaView style={GLOBALSTYLE.mainContainer}>

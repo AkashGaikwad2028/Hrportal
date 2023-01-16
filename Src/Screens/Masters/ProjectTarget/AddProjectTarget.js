@@ -52,6 +52,7 @@ const AddProjectTarget = ({ navigation }) => {
             for (i of reducerData.getResorceData) {
                 let item;
                 if (i.resources !== null) {
+                   
                     item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
                 }
                 newArray.push(item);
@@ -75,10 +76,12 @@ const AddProjectTarget = ({ navigation }) => {
                     listMode="FLATLIST"
                     dropDownContainerStyle={styles.dropDownContainerStyle}
                     renderListItem={({ item }) => {
+                        console.log("item=>>>>>>>>>>",item)
                         return (
                             <TouchableOpacity
                                 onPress={() => {
                                     setValue(item.value);
+                                   
                                     setOpen(false);
                                 }}
                                 style={styles.cellStyle}>
@@ -88,7 +91,7 @@ const AddProjectTarget = ({ navigation }) => {
                     }}
                     open={open}
                     value={value}
-                    items={items}
+                    item={items}
                     setOpen={setOpen}
                     setItems={setItems}
                 />
