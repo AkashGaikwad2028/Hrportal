@@ -8,6 +8,7 @@ import{
 } from "../ActionConstant"
 
 import request from "../../Util/request"
+import Toast from 'react-native-simple-toast';
 
 export function getPurchaseOrder() {
     return async dispatch => {
@@ -27,16 +28,17 @@ export function getPurchaseOrder() {
     };
   }
 
-  export function addPurchaseOrder(values, navigation) {
+  export function addPurchaseOrder(value, navigation) {
+    console.log("aadjfdfjudjnjnfc",value)
     return async dispatch => {
       dispatch( purchaseOrderDispatch({},  ADDPURCHASEORDER_PROGRESS));
       try {
         const {data} = await request({
           url: '/purchase',
           method: 'POST',
-          data: values,
+          data: value,
         });
-        //console.log('addProjectTarget response', data);
+        console.log('purchaseOrderDispatch ', data);
         if (data.data.message) {
           dispatch(data.data,  ADDPURCHASEORDER_SUCCESS);
           Toast.show(' purchaseOrderDispatch  Successfully');

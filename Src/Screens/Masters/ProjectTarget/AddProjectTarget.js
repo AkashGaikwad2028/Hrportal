@@ -61,8 +61,8 @@ const AddProjectTarget = ({ navigation }) => {
         }
     }, [reducerData.getResorceData]);
 
-    const submitResource = (values) => {
-        dispatch(addProjectTarget(values, navigation))
+    const submitResource = (value) => {
+        dispatch(addProjectTarget(value, navigation))
     }
 
     return (
@@ -122,6 +122,8 @@ const AddProjectTarget = ({ navigation }) => {
 
             </View>
         </SafeAreaView>
+
+        
     );
 };
 

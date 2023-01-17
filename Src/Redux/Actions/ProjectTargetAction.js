@@ -125,7 +125,7 @@ export function deleteProjectTarget(values) {
   };
 }
 
-projectTargetDispatch = (data, actionType) => {
+const projectTargetDispatch = (data, actionType) => {
   return {
     payload: data,
     type: actionType,
