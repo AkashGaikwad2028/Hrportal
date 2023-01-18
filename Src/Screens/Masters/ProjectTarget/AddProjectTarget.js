@@ -50,6 +50,7 @@ const AddProjectTarget = ({ navigation }) => {
         if (reducerData.getResorceData != null) {
             let newArray = [];
             for (i of reducerData.getResorceData) {
+                console.log(" reducerData.getResorceData53",reducerData.getResorceData)
                 let item;
                 if (i.resources !== null) {
                    

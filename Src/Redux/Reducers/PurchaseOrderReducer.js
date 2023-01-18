@@ -4,14 +4,22 @@ import{
     FETCHPURCHASEORDER_SUCCESS,
     ADDPURCHASEORDER_SUCCESS,
     ADDPURCHASEORDER_PROGRESS,
-    ADDPURCHASEORDER_FAIL
+    ADDPURCHASEORDER_FAIL,
+    GETRESOURCE_FAIL,
+    GETRESOURCE_PROGRESS,
+    GETRESOURCE_SUCCESS,
+    GETCLIENT_FAIL,
+    GETCLIENT_PROGRESS,
+    GETCLIENT_SUCCESS
 } from "../ActionConstant"
-import { addPurchaseOrder } from "../Actions/PurchaseOrderAction";
+// import { addPurchaseOrder } from "../Actions/PurchaseOrderAction";
 
 const initalState = {
     isLoading: false,
     purchaseorderData: {},
-    addPurchaseOrder:{}
+    addPurchaseOrder:{},
+    getResorceData:{},
+    getClientData:{}
   };
 
   const  PurchaseOrderReducer= (state = initalState, action) => {
@@ -33,6 +41,42 @@ const initalState = {
           ...state,
           isLoading: false,
           purchaseorderData: action.payload,
+        };
+        case GETRESOURCE_PROGRESS:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case GETRESOURCE_SUCCESS:
+      console.log('action.payload',action.payload)
+      return {
+        ...state,
+        isLoading: false,
+        getResorceData: action.payload,
+      };
+    case GETRESOURCE_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        getResorceData: action.payload,
+      };
+      case GETCLIENT_PROGRESS:
+        return {
+          ...state,
+          isLoading: true,
+        };
+      case GETCLIENT_SUCCESS:
+        console.log('action.payload',action.payload)
+        return {
+          ...state,
+          isLoading: false,
+          getClientData: action.payload,
+        };
+      case  GETCLIENT_FAIL:
+        return {
+          ...state,
+          isLoading: false,
+          getClientData: action.payload,
         };
         case   ADDPURCHASEORDER_PROGRESS:
           return {

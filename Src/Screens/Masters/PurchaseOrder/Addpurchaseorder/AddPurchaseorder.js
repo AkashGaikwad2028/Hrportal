@@ -16,14 +16,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../../../../Constants/Theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CustomButton from '../../../../Components/CustomButton';
-import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getResources } from '../../../../Redux/Actions/PurchaseOrderAction';
 import {addPurchaseOrder} from '../../../../Redux/Actions/PurchaseOrderAction';
 
 export default function AddPurchaseorder({navigation}) {
   const dispatch = useDispatch();
   const reducerdata = useSelector(state => state.PurchaseOrderReducer);
-  console.log('reducerDataAdd', reducerdata.purchaseorderData);
+  // console.log('reducerDataAdd', reducerdata.getResorceData);
+  console.log('reducerDataAdd', reducerdata.getClientData)
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [value, setValue] = useState(null);
@@ -44,86 +46,53 @@ export default function AddPurchaseorder({navigation}) {
     endDatePicker: false,
   });
 
-  const ClientList = () => {
-    if (reducerdata.purchaseorderData !== null) {
-      let newArray = [];
 
-      let newIdsList = [];
-      for (let i of reducerdata.purchaseorderData) {
-        // console.log(i.client_id);
-        if (i.clients) {
-          if (!newIdsList.some(o => o.client_id === i.client_id)) {
-            newIdsList.push({...i});
-          }
-        }
-      }
-
-      console.log('nelist', newIdsList);
-      for (var i of newIdsList) {
+  const ResourceList = () => {
+   console.log("resffsdg",reducerdata.getResorceData)
+   if (reducerdata.getResorceData != null) {
+    let newArray = [];
+    for ( var i of reducerdata.getResorceData) {
+      console.log("i=>>>>>>>>>>>>>>>>>>",i)
         let item;
-        if (i.clients) {
-          if (i.clients !== null) {
-            item = {
-              id: i.clients.id,
-              label: `${i.clients.client_name}`,
-              value: i.clients.id,
-            };
-            // console.log("itemAddpur=>>>>>>>>>",item)
-          }
-          newArray.push(item);
-        }
-      }
-      setItems(newArray);
+        if(i.fname || i.lname ){
+          if (i.fname && i.lname !== null) {
+            console.log("ifname,lname",i.fname,i.lname)
+             item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
+         }
+         newArray.push(item);
+        }  
     }
-  };
-
+    setItems(newArray); 
+}
+  }
   useEffect(() => {
     ClientList();
-  }, [reducerdata.purchaseorderData.clients]);
+  }, [reducerdata.getClientData]);
 
   useEffect(() => {
-    Resourcelist();
-  }, [reducerdata.purchaseorderData.resources]);
+    ResourceList();
+  }, [reducerdata.getResorceData]);
 
-  console.log('itemmmmmmmmmmmmmmmmm', resourceItem);
+  // console.log(' ResourceList ',  ResourceList() );
 
-  const Resourcelist = () => {
-    if (reducerdata.purchaseorderData !== null) {
+  const ClientList = () => {
+    if (reducerdata.getClientData !== null) {
       let newArray1 = [];
-      // console.log(reducerdata.purchaseorderData);
-
-      let newIdsList1 = [];
-      for (let i of reducerdata.purchaseorderData) {
-        // console.log(i.client_id);
-      if(i.resources[0]){
-        if ((!newIdsList1.some(r=>r.resources[0].id === i.resources[0].id) )) {
-          newIdsList1.push({...i});  
-      }
-      }
-      }
-      console.log("new104",newIdsList1)
-
-      for (var i of newIdsList1 ) {
-        console.log("iiiiiiiiiiiiiiiiihcjhd",i)
-        if (i.resources[0]) {
+      console.log("jdhfuiiiiiiiii=????????",reducerdata.getClientData);
+      for ( var i of reducerdata.getClientData) {
+        console.log("i=>>>>>>>>>>>>>>>>>>",i)
           let item;
-          if (i.resources[0] !== null) {
-            item = {
-              id: i.resources[0].id,
-              label: `${i.resources[0].fname} ${i.resources[0].lname}`,
-              value: i.resources[0].id,
-            };
-            console.log('resource', item);
-          }
-          newArray1.push(item);
-          console.log("newarry1",newArray1)
-        }
-        // console.log(' newArray1', newArray1)
+          if(i.client_name ){
+            if (i.client_name  !== null) {
+              console.log("i.client_name",i.client_name)
+               item = { id: i.id, label: `${i.client_name }`, value: i.id };
+           }
+           newArray1.push(item);
+          }  
       }
-      setResourceItem(newArray1);
-    }
+      setResourceItem(newArray1); 
   };
-
+  }
   // console.log("open",open1)
 
   const convertDate = value => {
@@ -180,19 +149,19 @@ export default function AddPurchaseorder({navigation}) {
     dispatch(addPurchaseOrder(values, navigation));
   };
   return (
-    <SafeAreaView style={GLOBALSTYLE.safeAreaViewStyle}>
+    <SafeAreaView style={[GLOBALSTYLE.safeAreaViewStyle]}>
       <CustomNavigationBar
         back={true}
         headername="Add purchase order"></CustomNavigationBar>
       <View style={[GLOBALSTYLE.mainContainer, {margin: 10}]}>
         <DropDownPicker
-           onPress={ClientList}
-          style={style.dropdownViewStyle}
+           onPress={ ClientList}
+          style={[style.dropdownViewStyle,{marginTop:25}]}
           placeholder="Client Name*"
           dropDownContainerStyle={style.dropDownContainerStyle}
           listMode="FLATLIST"
           renderListItem={({item}) => {
-            console.log('rendderlistad>>>>>>>>>>', item);
+            console.log('rendderCliennnt', item);
             return (
               <TouchableOpacity
                 onPress={() => {
@@ -211,8 +180,8 @@ export default function AddPurchaseorder({navigation}) {
           setItems={setItems}
         />
         <DropDownPicker
-         onPress={Resourcelist}
-          style={style.dropdownViewStyle}
+          style={[style.dropdownViewStyle,{marginTop:25}]}
+          onPress={ResourceList}
           placeholder="resources Name*"
           dropDownContainerStyle={style. dropDownContainerStyle}
         listMode="FLATLIST"
@@ -236,18 +205,17 @@ export default function AddPurchaseorder({navigation}) {
           items={resourceItem}
           setOpen={setOpen1}
           setItems={setResourceItem}
-
         /> 
         <TextInput
           placeholder="Order Number*"
-          style={[GLOBALSTYLE.TextInputStyle, {marginTop: 15}]}
+          style={[GLOBALSTYLE.TextInputStyle, {marginTop: 25}]}
           //  value={nickname}
           //  onChangeText={data => setnickname(data)}
           keyboardType="default"
           maxLength={25}
         />
 
-        <TouchableOpacity style={style.btnStyle} onPress={showStartDatePicker}>
+        <TouchableOpacity style={[style.btnStyle,{marginTop:25}]} onPress={showStartDatePicker}>
           <Text style={{color: COLORS.black}}>{displayDate.startDate}</Text>
           <FontAwesome
             name="calendar-o"
@@ -265,7 +233,7 @@ export default function AddPurchaseorder({navigation}) {
           />
         ) : null}
 
-        <TouchableOpacity style={style.btnStyle} onPress={showEndDatePicker}>
+        <TouchableOpacity style={[style.btnStyle,{marginTop:25}]} onPress={showEndDatePicker}>
           <Text style={{color: COLORS.black}}>{displayDate.endDate}</Text>
           <FontAwesome
             name="calendar-o"
@@ -282,8 +250,8 @@ export default function AddPurchaseorder({navigation}) {
             onChange={onEndDateSelected}
           />
         ) : null}
-{/* 
-        <TouchableOpacity style={style.btnStyle}>
+
+        {/* <TouchableOpacity style={style.btnStyle}>
           <Text style={{color: COLORS.black}} placeholder="choose-file">
             choose file
           </Text>
@@ -293,11 +261,20 @@ export default function AddPurchaseorder({navigation}) {
             style={{alignSelf: 'center', right: 30}}
           />
         </TouchableOpacity> */}
-
+ <TouchableOpacity
+              style={[style.btnStyles,{marginTop:25}]}
+             > 
+                <>
+                  <AntDesign name="upload" color={COLORS.blue} size={24} />
+                  <Text style={style.uploadBtnTextStyle}>Upload Pan Card</Text>
+                </>
+            </TouchableOpacity> 
+            <View style={{marginTop:25}}>
         <CustomButton
           title="Submit"
           onPressFunction={() => submitResource({resources: value, date:date})}
         />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -310,6 +287,7 @@ const style = StyleSheet.create({
     marginHorizontal: 10,
     alignSelf: 'center',
     borderColor: '#fff',
+    zIndex:100
   },
   dropDownContainerStyle: {
     marginVertical: 10,
@@ -337,4 +315,21 @@ const style = StyleSheet.create({
     fontWeight: '600',
     backgroundColor:  '#fff',
   },
-});
+  uploadBtnTextStyle: {
+    color: COLORS.blue,
+    fontSize: 16,
+    fontWeight: '600',
+    marginHorizontal: 4,
+  },
+   btnStyles: {
+    width:"100%",
+    height: 48,
+    backgroundColor: COLORS.lightBlue,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+})
+

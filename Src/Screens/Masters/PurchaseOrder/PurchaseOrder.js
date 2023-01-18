@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text
 } from "react-native";
-import {getPurchaseOrder} from "../../../Redux/Actions/PurchaseOrderAction"
+import {getPurchaseOrder, getResources,getClients} from "../../../Redux/Actions/PurchaseOrderAction"
 import { useSelector, useDispatch } from "react-redux";
 import { COLORS } from "../../../Constants/Theme";
 import { ActivityIndicator } from "react-native";
@@ -25,12 +25,15 @@ const PurchaseOrder = ({ navigation }) => {
     const [filterPurchaseData, setFilterPurchaseData] = useState(null);
 
 
-    useEffect(() => {
-        
-            dispatch(getPurchaseOrder())
-      
-    },[loading] );
 
+    useEffect(() => {
+      const unSubscribe = navigation.addListener('focus', () => {
+        dispatch(getPurchaseOrder())
+          dispatch(getResources())
+          dispatch(getClients())
+      });
+      return unSubscribe;
+  }, [navigation]);
     
 //   useEffect(() => {
 //     const unsubscribe = navigation.addListener('blur', () => {
