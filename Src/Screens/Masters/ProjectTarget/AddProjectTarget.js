@@ -49,11 +49,10 @@ const AddProjectTarget = ({ navigation }) => {
        useEffect(() => {
         if (reducerData.getResorceData != null) {
             let newArray = [];
-            for (i of reducerData.getResorceData) {
+            for ( var i of reducerData.getResorceData) {
                 console.log(" reducerData.getResorceData53",reducerData.getResorceData)
                 let item;
                 if (i.resources !== null) {
-                   
                     item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
                 }
                 newArray.push(item);
@@ -63,6 +62,7 @@ const AddProjectTarget = ({ navigation }) => {
     }, [reducerData.getResorceData]);
 
     const submitResource = (value) => {
+        console.log("valueprojectaction=>>>>>>>>>>",value)
         dispatch(addProjectTarget(value, navigation))
     }
 

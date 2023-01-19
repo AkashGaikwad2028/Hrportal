@@ -358,7 +358,6 @@ LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 const AddResource = () => {
   const dispatch = useDispatch();
-
   const [formData, dispatcher] = useReducer(reducer, initalState);
   const [venderList, setVenderList] = useState([]);
   const [technologyList, setTechnologyList] = useState([]);
@@ -683,7 +682,7 @@ const AddResource = () => {
                 dispatcher({type: 'projectname', payload: text});
               }}
             />
-            <View style={styles.verticalSpace} />
+            <View style={styles.verticalSpace}/>
             <Dropdown
               data={technologyList}
               style={styles.dropdownViewStyle}

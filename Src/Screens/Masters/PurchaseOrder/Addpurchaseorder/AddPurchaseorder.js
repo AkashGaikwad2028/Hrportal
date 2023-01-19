@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useReducer} from 'react';
 import {
   View,
   Text,
@@ -15,23 +15,27 @@ import {GLOBALSTYLE} from '../../../../Constants/Styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../../../../Constants/Theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import CustomButton from '../../../../Components/CustomButton';
+import DocumentPicker from 'react-native-document-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getResources } from '../../../../Redux/Actions/PurchaseOrderAction';
+import { initalState,reducer } from './addPurchaseFormData';
+import validation from '../../../../Util/helper';
 import {addPurchaseOrder} from '../../../../Redux/Actions/PurchaseOrderAction';
+import Toast from 'react-native-simple-toast';
 
 export default function AddPurchaseorder({navigation}) {
   const dispatch = useDispatch();
   const reducerdata = useSelector(state => state.PurchaseOrderReducer);
   // console.log('reducerDataAdd', reducerdata.getResorceData);
   console.log('reducerDataAdd', reducerdata.getClientData)
+  const [formData, dispatcher] = useReducer(reducer, initalState);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const [resourcevalue, setResourcevalueValue] = useState(null);
   const [resourceItem, setResourceItem] = useState([]);
+  // const [OrderNumber,setOrderNumber]=useState({ordernumber:""})
   const [date, setDate] = useState({
     startDate: new Date(Date.now()),
     endDate: new Date(Date.now()),
@@ -46,6 +50,79 @@ export default function AddPurchaseorder({navigation}) {
     endDatePicker: false,
   });
 
+  // console.log("orderNumber=>>>>>>>",OrderNumber)
+
+  const selectResume = async (fileName, Error) => {
+    try {
+      const file = await DocumentPicker.pickSingle({
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.docx,
+          DocumentPicker.types.doc,
+        ],
+      });
+      dispatcher({
+        type: fileName,
+        payload: {uri: file.uri, type: file.type, name: file.name},
+      });
+
+      dispatcher({
+        type: Error,
+        payload: validation.validatefile(file.uri),
+      });
+
+      if (file !== null) {
+        Toast.showWithGravity(
+          'File Selected Successfully',
+          Toast.SHORT,
+          Toast.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Toast.showWithGravity(
+        'File Not Selected Successfully',
+        Toast.SHORT,
+        Toast.BOTTOM,
+      );
+    }
+  };
+
+
+  const onSubmit = () => {
+    const resumeError = validation.validatefile(formData.resume?.uri);
+    const  clientError = validation.validateField(formData. client);
+    const resourceError = validation.validateField(formData.resource);
+    const  startDateError = validation.validateField(formData.startDate);
+    const  EndDateError = validation.validateField(formData.EndDate);
+    const OrderError=validation.validateField(formData.Order)
+    if(
+      resourceError||
+      clientError||
+      resumeError||
+      startDateError||
+      EndDateError||
+      OrderError
+    ){
+      dispatcher({type: 'resumeError', payload:resumeError});
+      dispatcher({type: 'clientError', payload:clientError});
+      dispatcher({type: 'resourceError', payload:resourceError});
+      dispatcher({type: 'startDateError', payload:startDateError});
+      dispatcher({type: 'EndDateError', payload:EndDateError});   
+      dispatcher({type: 'OrderError', payload:OrderError});   
+      return
+    }
+
+    dispatcher({type: 'resumeError', payload:null});
+      dispatcher({type: 'resumeError', payload:null});
+      dispatcher({type: 'resourceError', payload:null});
+      dispatcher({type: 'startDateError', payload:null});
+      dispatcher({type: 'EndDateError', payload:null});
+      dispatcher({type: 'clientError', payload:null});
+      dispatcher({type: 'OrderError', payload:null});
+      console.log("formData=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",formData)
+
+      dispatch(addPurchaseOrder(formData, navigation))
+  }
 
   const ResourceList = () => {
    console.log("resffsdg",reducerdata.getResorceData)
@@ -99,11 +176,10 @@ export default function AddPurchaseorder({navigation}) {
     const currentDate = value || date;
     let tempDate = new Date(currentDate);
     let fDate =
-      tempDate.getMonth() +
-      1 +
+    tempDate.getDate()  +
       '/' +
-      tempDate.getDate() +
-      '/' +
+        tempDate.getMonth()+
+      '/' +  1 +
       tempDate.getFullYear();
     //console.log(fDate)
     return fDate;
@@ -119,6 +195,14 @@ export default function AddPurchaseorder({navigation}) {
     setDisplayDate(prevDates => {
       return {...prevDates, startDate: convertDate(value)};
     });
+    dispatcher({
+      type: 'startDate',
+      payload:displayDate.startDate,
+    });
+    dispatcher({
+      type: 'startDateError',
+      payload: null,
+    });
   }
 
   function onEndDateSelected(event, value) {
@@ -130,6 +214,15 @@ export default function AddPurchaseorder({navigation}) {
     });
     setDisplayDate(prevDates => {
       return {...prevDates, endDate: convertDate(value)};
+    });
+
+    dispatcher({
+      type: 'EndDate',
+      payload: displayDate.endDate,
+    });
+    dispatcher({
+      type: 'EndDateError',
+      payload: null,
     });
   }
 
@@ -145,17 +238,20 @@ export default function AddPurchaseorder({navigation}) {
     });
   }
 
-  const submitResource = values => {
-    dispatch(addPurchaseOrder(values, navigation));
-  };
+  // const submitResource = values => {
+  //   dispatch(addPurchaseOrder(values, navigation));
+  // };
+
+  
+
   return (
     <SafeAreaView style={[GLOBALSTYLE.safeAreaViewStyle]}>
       <CustomNavigationBar
         back={true}
         headername="Add purchase order"></CustomNavigationBar>
       <View style={[GLOBALSTYLE.mainContainer, {margin: 10}]}>
+        <View>
         <DropDownPicker
-           onPress={ ClientList}
           style={[style.dropdownViewStyle,{marginTop:25}]}
           placeholder="Client Name*"
           dropDownContainerStyle={style.dropDownContainerStyle}
@@ -164,10 +260,16 @@ export default function AddPurchaseorder({navigation}) {
             console.log('rendderCliennnt', item);
             return (
               <TouchableOpacity
-                onPress={() => {
-                  setValue(item.value);
-                  setOpen(false);
-                }}
+              onPress={()=>{
+                console.log("payload Client=>>>>",item)
+                setValue(item.value)
+                setOpen(false)
+                dispatcher({type:"client",payload:item.label})
+                 dispatcher({
+              type:"clientError",
+              payload:validation.validateField(item.label)
+             })
+              }}
                 style={style.cellStyle}>
                 <Text style={style.cellTextStyle}>{item.label}</Text>
               </TouchableOpacity>
@@ -179,6 +281,9 @@ export default function AddPurchaseorder({navigation}) {
           setOpen={setOpen}
           setItems={setItems}
         />
+        {formData.clientError !== null && (
+              <Text style={style.errorText}>{formData.clientError}</Text>
+            )}
         <DropDownPicker
           style={[style.dropdownViewStyle,{marginTop:25}]}
           onPress={ResourceList}
@@ -189,10 +294,16 @@ export default function AddPurchaseorder({navigation}) {
             console.log("rendderlistad>>>>>>>>>>",item)
             return(
               <TouchableOpacity
+             
               onPress={()=>{
+                console.log("payload resources=>>>>",item)
                 setResourcevalueValue(item.value)
                 setOpen1(false)
-                setOpen1(false)
+                dispatcher({type:"resource",payload:item.label})
+                 dispatcher({
+              type:"resourceError",
+              payload:validation.validateField(item.value)
+             })
               }}
               style={style.cellStyle}
               >
@@ -206,15 +317,23 @@ export default function AddPurchaseorder({navigation}) {
           setOpen={setOpen1}
           setItems={setResourceItem}
         /> 
+      
+          {formData.resourceError !== null && (
+              <Text style={style.errorText}>{formData.resourceError}</Text>
+            )}
         <TextInput
           placeholder="Order Number*"
           style={[GLOBALSTYLE.TextInputStyle, {marginTop: 25}]}
-          //  value={nickname}
-          //  onChangeText={data => setnickname(data)}
+           value={formData.Order}
+           onChangeText={data => dispatcher({type:'Order', payload:data})}
           keyboardType="default"
           maxLength={25}
         />
-
+         {formData.OrderError !== null && (
+              <Text style={style.errorText}>{formData.OrderError}</Text>
+            )}
+  </View>
+  <View >
         <TouchableOpacity style={[style.btnStyle,{marginTop:25}]} onPress={showStartDatePicker}>
           <Text style={{color: COLORS.black}}>{displayDate.startDate}</Text>
           <FontAwesome
@@ -232,6 +351,9 @@ export default function AddPurchaseorder({navigation}) {
             onChange={onStartDateSelected}
           />
         ) : null}
+         {formData.startDateError !== null && (
+              <Text style={style.errorText}>{formData.startDateError}</Text>
+            )}
 
         <TouchableOpacity style={[style.btnStyle,{marginTop:25}]} onPress={showEndDatePicker}>
           <Text style={{color: COLORS.black}}>{displayDate.endDate}</Text>
@@ -250,7 +372,11 @@ export default function AddPurchaseorder({navigation}) {
             onChange={onEndDateSelected}
           />
         ) : null}
+ {formData.EndDateError !== null && (
+              <Text style={style.errorText}>{formData.EndDateError}</Text>
+            )}
 
+</View>
         {/* <TouchableOpacity style={style.btnStyle}>
           <Text style={{color: COLORS.black}} placeholder="choose-file">
             choose file
@@ -261,20 +387,38 @@ export default function AddPurchaseorder({navigation}) {
             style={{alignSelf: 'center', right: 30}}
           />
         </TouchableOpacity> */}
- <TouchableOpacity
-              style={[style.btnStyles,{marginTop:25}]}
-             > 
+        <View>
+  <TouchableOpacity
+              style={style.btnStyle}
+              onPress={() => {
+                console.log("resumepress")
+                selectResume('resume', 'resumeError');
+              }}>
+              {formData.resume !== null ? (
+                <Text style={style.uploadBtnTextStyle}>
+                  {formData?.resume?.name}
+                </Text>
+              ) : (
                 <>
                   <AntDesign name="upload" color={COLORS.blue} size={24} />
-                  <Text style={style.uploadBtnTextStyle}>Upload Pan Card</Text>
+                  <Text style={style.uploadBtnTextStyle}>Upload Resume</Text>
                 </>
-            </TouchableOpacity> 
-            <View style={{marginTop:25}}>
-        <CustomButton
-          title="Submit"
-          onPressFunction={() => submitResource({resources: value, date:date})}
-        />
-        </View>
+              )}
+            </TouchableOpacity>
+            {formData.resumeError !== null && (
+              <Text style={style.errorText}>{formData.resumeError}</Text>
+            )}
+
+</View>
+        <TouchableOpacity
+              style={style.btnStyles}
+              onPress={() => {
+                onSubmit();
+              }}
+              >
+              <Text style={style.submitBtnTextStyle}>Submit</Text>
+            </TouchableOpacity>
+           
       </View>
     </SafeAreaView>
   );
@@ -284,13 +428,14 @@ const style = StyleSheet.create({
   dropdownViewStyle: {
     backgroundColor: '#fff',
     marginTop: 10,
-    marginHorizontal: 10,
+    marginHorizontal:10,
     alignSelf: 'center',
     borderColor: '#fff',
     zIndex:100
   },
   dropDownContainerStyle: {
     marginVertical: 10,
+    marginHorizontal:10,
     paddingVertical: 4,
     borderColor: '#fff',
   },
@@ -330,6 +475,19 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorText: {
+    color: COLORS.red,
+    fontSize: 12,
+    marginHorizontal:10,
+    marginVertical: 2,
+    paddingHorizontal: 2,
+  },
+  submitBtnTextStyle: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: '600',
+    marginHorizontal: 4,
   },
 })
 

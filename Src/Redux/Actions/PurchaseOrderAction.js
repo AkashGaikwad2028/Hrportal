@@ -68,16 +68,16 @@ export function getPurchaseOrder() {
   }
 
   export function addPurchaseOrder(value, navigation) {
-    console.log("aadjfdfjudjnjnfc",value)
+    console.log("aadjfdfjudjnjnfc=>>>>>>>>>>>>>>>>>>>",value)
     return async dispatch => {
       dispatch( purchaseOrderDispatch({},  ADDPURCHASEORDER_PROGRESS));
       try {
-        const {data} = await request({
+        const data = await request({
           url: '/purchase',
           method: 'POST',
           data: value,
         });
-        console.log('purchaseOrderDispatch ', data);
+        console.log('purchaseOrderDispatch=>>>>>>>>>> ', data);
         if (data.data.message) {
           dispatch(data.data,  ADDPURCHASEORDER_SUCCESS);
           Toast.show(' purchaseOrderDispatch  Successfully');
