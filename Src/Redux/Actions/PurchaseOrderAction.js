@@ -40,7 +40,7 @@ export function getPurchaseOrder() {
       dispatch(purchaseOrderDispatch({}, GETRESOURCE_PROGRESS));
       try {
         const {data} = await request({url: '/resource', method: 'GET'});
-      //  console.log('getResources response', data.data.resources);
+       console.log('getResources response', data.data.resources);
         dispatch(
           purchaseOrderDispatch(data.data.resources, GETRESOURCE_SUCCESS),
         );

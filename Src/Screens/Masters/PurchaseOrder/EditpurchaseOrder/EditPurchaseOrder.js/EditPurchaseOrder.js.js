@@ -10,32 +10,43 @@ import {
   Platform,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import CustomNavigationBar from '../../../../Components/CustomNavigationBar';
-import {GLOBALSTYLE} from '../../../../Constants/Styles';
+import CustomNavigationBar from '../../../../../Components/CustomNavigationBar';
+import { GLOBALSTYLE } from '../../../../../Constants/Styles';
 import {useDispatch, useSelector} from 'react-redux';
-import {COLORS} from '../../../../Constants/Theme';
+import { COLORS } from '../../../../../Constants/Theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker from 'react-native-document-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { initalState,reducer } from './addPurchaseFormData';
-import validation from '../../../../Util/helper';
-import {addPurchaseOrder} from '../../../../Redux/Actions/PurchaseOrderAction';
+import { initalState,editreducer } from '../editPurchaseFormData';
+import validation from '../../../../../Util/helper';
 import Toast from 'react-native-simple-toast';
 
-export default function AddPurchaseorder({navigation}) {
+export default function EditPurchaseOrder({route}) {
+  const params=route.params.newData
+  console.log("params =>>>",params.clients.client_name)
   const dispatch = useDispatch();
   const reducerdata = useSelector(state => state.PurchaseOrderReducer);
   // console.log('reducerDataAdd', reducerdata.getResorceData);
   // console.log('reducerDataAdd', reducerdata.getResorceData)
-  const [formData, dispatcher] = useReducer(reducer, initalState);
+  const [formData, dispatcher] = useReducer(editreducer,initalState);
   const [resourceopen, setResourceOpen] = useState(false);
   const [clientopen, setclientopen] = useState(false);
-  const [clientValue, setclientValue] = useState(null);
+  // const [valve,setvalve]=useState(params.clients.client_name)
+  const [clientValue, setclientValue] = useState([]);
   const [clientItems, setclientItems] = useState([]);
-  // const [resourcevalue, setResourcevalueValue] = useState(null);
-  // const [resourceItem, setResourceItem] = useState([]);
+  const [resourcevalue, setResourcevalue] = useState([]);
+  const [resourceItem, setResourceItem] = useState([]);
   // const [OrderNumber,setOrderNumber]=useState({ordernumber:""})
+  
+  // useEffect(()=>{
+  //   // if (clientopen==false){
+  //      setclientValue(params.clients.client_name)
+  //   // }
+  // },[])
+  
+  console.log("Cliients",clientValue)
+
   const [date, setDate] = useState({
     startDate: new Date(Date.now()),
     endDate: new Date(Date.now()),
@@ -130,7 +141,7 @@ export default function AddPurchaseorder({navigation}) {
       }
       console.log("formData=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",ReFormdata)
 
-      dispatch(addPurchaseOrder(ReFormdata,navigation))
+      // dispatch(addPurchaseOrder(ReFormdata,navigation))
   }
 
 //   const ResourceList = () => {
@@ -159,7 +170,6 @@ export default function AddPurchaseorder({navigation}) {
   useEffect(() => {
     ClientList();
   }, [reducerdata.getClientData]);
-
 
   // console.log(' ResourceList ',  ResourceList() );
 
@@ -269,7 +279,7 @@ export default function AddPurchaseorder({navigation}) {
   }
 
   
-  
+  console.log("CLentsValue",)
 
   return (
     <SafeAreaView style={[GLOBALSTYLE.safeAreaViewStyle]}>
@@ -279,8 +289,8 @@ export default function AddPurchaseorder({navigation}) {
       <View style={[GLOBALSTYLE.mainContainer, {margin: 10}]}>
         <View>
         <DropDownPicker
+          defaultValue={params.clients.client_name}
           style={[style.dropdownViewStyle,{marginTop:25}]}
-          placeholder="Client Name*"
           dropDownContainerStyle={style.dropDownContainerStyle}
           listMode="FLATLIST"
           renderListItem={({item}) => {
@@ -292,7 +302,7 @@ export default function AddPurchaseorder({navigation}) {
                 setclientValue(item.value)
                 setclientopen(false)
                 dispatcher({type:"client",payload:item.label})
-                 dispatcher({
+                dispatcher({
               type:"clientError",
               payload:validation.validateField(item.label)
              })
@@ -311,9 +321,9 @@ export default function AddPurchaseorder({navigation}) {
         {formData.clientError !== null && (
               <Text style={style.errorText}>{formData.clientError}</Text>
             )}
-        {/* <DropDownPicker
+        <DropDownPicker
           style={[style.dropdownViewStyle,{marginTop:25}]}
-          placeholder="resources Name*"
+          placeholder={params.resources[0].fname +" "+ params.resources[0].lname}
           dropDownContainerStyle={style. dropDownContainerStyle}
         listMode="FLATLIST"
           renderListItem={({item})=>{
@@ -345,7 +355,7 @@ export default function AddPurchaseorder({navigation}) {
       
           {formData.resourceError !== null && (
               <Text style={style.errorText}>{formData.resourceError}</Text>
-            )} */}
+            )}
         <TextInput
           placeholder="Order Number*"
           style={[GLOBALSTYLE.TextInputStyle, {marginTop: 25}]}

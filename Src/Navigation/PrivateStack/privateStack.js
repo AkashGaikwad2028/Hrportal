@@ -41,7 +41,7 @@ import AddReason from '../../Screens/Masters/Reason/AddReason';
 import EditReason from '../../Screens/Masters/Reason/EditReason';
 import AddAccount from '../../Screens/Masters/Account/AddAccount';
 import EditAccount from '../../Screens/Masters/Account/EditAccount';
-import ViewPdf from '../../Screens/Masters/PurchaseOrder/EditpurchaseOrder/EditPurchaseOrder.js/ViewPdf';
+import EditPurchaseOrder from '../../Screens/Masters/PurchaseOrder/EditpurchaseOrder/EditPurchaseOrder.js/EditPurchaseOrder.js';
 import AddPurchaseorder from '../../Screens/Masters/PurchaseOrder/Addpurchaseorder/AddPurchaseorder';
 
 const privatestack = createNativeStackNavigator();
@@ -116,6 +116,7 @@ function privateStack() {
       <privatestack.Screen name="AddAccount" component={AddAccount} />
       <privatestack.Screen name="EditAccount" component={EditAccount} />
       <privatestack.Screen name="AddPurchaseorder" component={AddPurchaseorder} />
+      <privatestack.Screen name="EditPurchaseOrder" component={EditPurchaseOrder} />
     </privatestack.Navigator>
   );
 }

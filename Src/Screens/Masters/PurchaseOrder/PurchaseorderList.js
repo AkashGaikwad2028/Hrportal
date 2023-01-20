@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
-function PurchaseOrderList({ data}) {
+function PurchaseOrderList({ data,editPurchaseOrder}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [PdfData,setPdfData]=useState('')
   console.log('modalVisible',modalVisible)
@@ -110,6 +110,9 @@ onRequestClose={() => {
             <SmallButton
               color={COLORS.lightBlue}
               title={'Edit'}
+              onPressFunction={() => {
+                editPurchaseOrder(item)
+              }}
             />
           </View>
           <View style={[styles.innerViewStyle]}>
@@ -129,6 +132,7 @@ onRequestClose={() => {
         data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.id}
+        edit
       />
     </View>
   );

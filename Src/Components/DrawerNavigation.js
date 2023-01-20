@@ -256,23 +256,6 @@ const DrawerNavigation = ({ navigation }) => {
         component={Setting}
         options={{ headerShown: true, headerTitleAlign: 'center' }}
       />
-       <Drawer.Screen
-        name="PurchaseOrder"
-        component={PurchaseOrder}
-        options={{
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerRight: () => (
-            <AntDesign
-              name="plus"
-              size={25}
-              color="black"
-              style={GLOBALSTYLE.headerRightStyle}
-              onPress={() => navigation.navigate('AddPurchaseorder')}
-            />
-          ),
-        }}
-      />
     </Drawer.Navigator>
   );
 };

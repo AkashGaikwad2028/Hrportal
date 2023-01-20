@@ -84,10 +84,10 @@ const PurchaseOrder = ({ navigation }) => {
         setSearch(value);
       };
 
-      // const ViewPdf=()=>{
-      //   console.log("viewpdfpresss")
-      //   navigation.navigate('ViewPdf')
-      // }
+      const editPurchaseOrder=(data)=>{
+        console.log("EditPurchaseOrder")
+        navigation.navigate('EditPurchaseOrder',{newData:data})
+      }
 
     console.log("purchase----",purchaseOrder) 
     return (
@@ -116,7 +116,7 @@ const PurchaseOrder = ({ navigation }) => {
        <View style={styles.listContainer}>
           <PurchaseOrderList
             data={filterPurchaseData}
-          //  ViewPdf={ViewPdf}
+           editPurchaseOrder={editPurchaseOrder}
           />
         </View>
      )}
