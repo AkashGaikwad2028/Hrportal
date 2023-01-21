@@ -5,12 +5,13 @@ import {
     StyleSheet,
     Text
 } from "react-native";
-import {getPurchaseOrder, getResources,getClients} from "../../../Redux/Actions/PurchaseOrderAction"
+import {getPurchaseOrder, getResources,getClients, deletePurchaseOrders} from "../../../Redux/Actions/PurchaseOrderAction"
 import { useSelector, useDispatch } from "react-redux";
 import { COLORS } from "../../../Constants/Theme";
 import { ActivityIndicator } from "react-native";
 import PurchaseOrderList from "./PurchaseorderList";
 import SearchBox from "../../../Components/SearchBox";
+
 
 
 const PurchaseOrder = ({ navigation }) => {
@@ -20,7 +21,7 @@ const PurchaseOrder = ({ navigation }) => {
 
     const [purchaseOrder, setpurchaseOrder] = useState(null);
     const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState('');
+    // const [error, setError] = useState(false);
     const [search, setSearch] = useState('');
     const [filterPurchaseData, setFilterPurchaseData] = useState(null);
 
@@ -28,6 +29,7 @@ const PurchaseOrder = ({ navigation }) => {
 
     useEffect(() => {
       const unSubscribe = navigation.addListener('focus', () => {
+       
         dispatch(getPurchaseOrder())
           dispatch(getResources())
           dispatch(getClients())
@@ -47,7 +49,6 @@ const PurchaseOrder = ({ navigation }) => {
     useEffect(() => {
         // console.log("-------------------",reducerData.purchaseorderData)
         setLoading(false)
-        // setError(reducerData.errorPurchase)
        setpurchaseOrder(reducerData.purchaseorderData)
        setFilterPurchaseData(reducerData.purchaseorderData)
     }, [reducerData.purchaseorderData])
@@ -58,6 +59,8 @@ const PurchaseOrder = ({ navigation }) => {
     
       // console.log("error",error)
 
+      console.log("loading",loading)
+    
     const getPurchaseOrderFilterData = () => {
         const filterValue = purchaseOrder?.filter(data => {
             if (search.length === 0) {
@@ -79,15 +82,23 @@ const PurchaseOrder = ({ navigation }) => {
         });
         setFilterPurchaseData(filterValue);
       }
+
+      const deletePurchaseOrder = (id) => {
+        dispatch(deletePurchaseOrders(id))
+        setSearch('');
+        const remaningData = purchaseOrder.filter(t => t.id !== id);
+        setFilterPurchaseData([...remaningData]);
+      }
       
     const setSearchValue = value => {
         setSearch(value);
       };
-
+console.log("gdgddfdfdffdf",!loading && purchaseOrder && purchaseOrder.length<0)
       const editPurchaseOrder=(data)=>{
         console.log("EditPurchaseOrder")
         navigation.navigate('EditPurchaseOrder',{newData:data})
       }
+
 
     console.log("purchase----",purchaseOrder) 
     return (
@@ -112,11 +123,12 @@ const PurchaseOrder = ({ navigation }) => {
           <Text> purchase order Information is not found </Text>
         </View> 
      )}  */}
-      {!loading && purchaseOrder && purchaseOrder.length>0 && (
+      {!loading && purchaseOrder && purchaseOrder.length>0 &&(
        <View style={styles.listContainer}>
           <PurchaseOrderList
             data={filterPurchaseData}
            editPurchaseOrder={editPurchaseOrder}
+           deletePurchaseOrder={deletePurchaseOrder}
           />
         </View>
      )}

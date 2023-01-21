@@ -27,13 +27,14 @@ export default function EditPurchaseOrder({route}) {
   console.log("params =>>>",params.clients.client_name)
   const dispatch = useDispatch();
   const reducerdata = useSelector(state => state.PurchaseOrderReducer);
+  const [selectedValue, setSelectedValue] = useState("Option 1");
   // console.log('reducerDataAdd', reducerdata.getResorceData);
   // console.log('reducerDataAdd', reducerdata.getResorceData)
   const [formData, dispatcher] = useReducer(editreducer,initalState);
   const [resourceopen, setResourceOpen] = useState(false);
   const [clientopen, setclientopen] = useState(false);
   // const [valve,setvalve]=useState(params.clients.client_name)
-  const [clientValue, setclientValue] = useState([]);
+  const [clientValue, setclientValue] = useState("akashhhhh");
   const [clientItems, setclientItems] = useState([]);
   const [resourcevalue, setResourcevalue] = useState([]);
   const [resourceItem, setResourceItem] = useState([]);
@@ -279,13 +280,13 @@ export default function EditPurchaseOrder({route}) {
   }
 
   
-  console.log("CLentsValue",)
+  console.log("CLentsValue")
 
   return (
     <SafeAreaView style={[GLOBALSTYLE.safeAreaViewStyle]}>
       <CustomNavigationBar
         back={true}
-        headername="Add purchase order"></CustomNavigationBar>
+        headername="Edit purchase order"></CustomNavigationBar>
       <View style={[GLOBALSTYLE.mainContainer, {margin: 10}]}>
         <View>
         <DropDownPicker
@@ -315,6 +316,7 @@ export default function EditPurchaseOrder({route}) {
           open={clientopen}
           value={clientValue}
           items={clientItems}
+          selectedValue={selectedValue}
           setOpen={setclientopen}
           setItems={setclientItems}
         />
@@ -410,7 +412,7 @@ export default function EditPurchaseOrder({route}) {
  {formData.EndDateError !== null && (
               <Text style={style.errorText}>{formData.EndDateError}</Text>
             )}
-
+            
 </View>
         {/* <TouchableOpacity style={style.btnStyle}>
           <Text style={{color: COLORS.black}} placeholder="choose-file">

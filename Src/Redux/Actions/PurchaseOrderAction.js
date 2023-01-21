@@ -10,7 +10,10 @@ import{
     GETRESOURCE_SUCCESS,
     GETCLIENT_FAIL,
     GETCLIENT_PROGRESS,
-    GETCLIENT_SUCCESS
+    GETCLIENT_SUCCESS,
+    DELETEPURCAHSEORDER_PROGRESS,
+    DELETEPURCAHSEORDER_SUCCESS,
+    DELETEPURCAHSEORDER_FAIL
 } from "../ActionConstant"
 
 import request from "../../Util/request"
@@ -90,6 +93,28 @@ export function getPurchaseOrder() {
       }
     };
   }
+
+  export function deletePurchaseOrders(values) {
+    return async dispatch => {
+        dispatch(purchaseOrderDispatch({}, DELETEPURCAHSEORDER_PROGRESS));
+        try {
+            const data = await request({
+                url: `/purchase/${values}`,
+                method: 'DELETE',
+            });
+            console.log('DELETEPURCAHSEORDER', data.data);
+            if (data.data.message) {
+                dispatch(purchaseOrderDispatch(data, DELETEPURCAHSEORDER_SUCCESS));
+                Toast.show('DELETEPURCAHSEORDER deleted Successfully');
+            }
+        } catch (err) {
+            console.log('deleteVendor error', err);
+            dispatch(purchaseOrderDispatch(err, DELETEPURCAHSEORDER_FAIL));
+            Toast.show('DELETEPURCAHSEORDER Not deleted Successfully');
+        }
+    }
+
+}
   
  const purchaseOrderDispatch = (data,actionType) => {
     return {

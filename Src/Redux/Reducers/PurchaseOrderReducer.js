@@ -10,7 +10,10 @@ import{
     GETRESOURCE_SUCCESS,
     GETCLIENT_FAIL,
     GETCLIENT_PROGRESS,
-    GETCLIENT_SUCCESS
+    GETCLIENT_SUCCESS,
+    DELETEPURCAHSEORDER_PROGRESS,
+    DELETEPURCAHSEORDER_SUCCESS,
+    DELETEPURCAHSEORDER_FAIL
 } from "../ActionConstant"
 // import { addPurchaseOrder } from "../Actions/PurchaseOrderAction";
 
@@ -19,7 +22,8 @@ const initalState = {
     purchaseorderData: {},
     addPurchaseOrder:{},
     getResorceData:{},
-    getClientData:{}
+    getClientData:{},
+    deletePurchaseOrderResponse: {}
   };
 
   const  PurchaseOrderReducer= (state = initalState, action) => {
@@ -95,6 +99,23 @@ const initalState = {
             isLoading: false,
             addPurchaseOrder: action.payload,
           };
+          case  DELETEPURCAHSEORDER_PROGRESS:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case  DELETEPURCAHSEORDER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                deletePurchaseOrderResponse: action.payload
+            };
+        case  DELETEPURCAHSEORDER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                deletePurchaseOrderResponse: action.payload
+            }
       default:
         return state;
     }

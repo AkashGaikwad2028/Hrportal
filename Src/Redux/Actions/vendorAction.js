@@ -21,5 +21,4 @@ const venderActions = {
   fetchVendorRequest,
   fetchVendorSuccess,
 };
-
 export default venderActions;
