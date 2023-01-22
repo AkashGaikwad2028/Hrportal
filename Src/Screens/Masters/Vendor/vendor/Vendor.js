@@ -20,7 +20,7 @@ const Vendor = () => {
   const { reducer } = useSelector(state => ({
     reducer: state.vendor,
   }));
-
+console.log("vvenndor reducer=>>>>>>>>>>>>>>",reducer)
   const { vendorError, vendorSuccess } = reducer;
 
   useEffect(() => {

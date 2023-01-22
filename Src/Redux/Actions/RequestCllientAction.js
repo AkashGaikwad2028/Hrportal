@@ -1,25 +1,32 @@
 import {
- FETCHREQUESTCLIENT_FAIL,
+ FETCHREQUESTCLIENT_FAILURE,
  FETCHREQUESTCLIENT_PROGRESS,
- FETCHREQUESTCLIENT_SUCCESS
+ FETCHREQUESTCLIENT_SUCCESS,
   } from '../ActionConstant';
+  import request from '../../Util/request';
   
-  const fetchRequestClientRequest = () => {
-    return {type: FETCHREQUESTCLIENT_PROGRESS};
+  export function getRequetsClient() {
+    return async dispatch => {
+      dispatch(
+        RequetsClientDispatch({isLoading: true},  FETCHREQUESTCLIENT_PROGRESS),
+      );
+      try {
+        const res = await request({url:'/client-request', method: 'GET'});
+        console.log('client-request Response', res.data);
+        dispatch(
+          RequetsClientDispatch(res.data,  FETCHREQUESTCLIENT_SUCCESS),
+        );
+      } catch (error) {
+        console.log('client-request', error);
+        dispatch(error,FETCHREQUESTCLIENT_FAILURE);
+      }
+    };
+  }
+
+   
+ const RequetsClientDispatch = (data,actionType) => {
+  return {
+    payload: data,
+    type: actionType,
   };
-  
-  const  fetchRequestClientSuccess = request => {
-    return {type:FETCHREQUESTCLIENT_SUCCESS, payload:request};
-  };
-  
-  const  fetchRequestClientFailuer = error => {
-    return {type: FETCHREQUESTCLIENT_FAIL, payload: error};
-  };
-  
-  const RequestCllientAction = {
-    fetchRequestClientFailuer,
-    fetchRequestClientRequest,
-    fetchRequestClientSuccess,
-  };
-  
-  export default RequestCllientAction;
+};

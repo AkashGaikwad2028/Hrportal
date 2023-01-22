@@ -132,7 +132,7 @@ onRequestClose={() => {
       <FlatList
         data={data}
         renderItem={_renderItem}
-        keyExtractor={item => item.id}
+    
         edit
       />
     </View>
