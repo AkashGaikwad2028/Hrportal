@@ -3,7 +3,7 @@ import {
   View,
   SafeAreaView,
   StyleSheet,
-  Text
+  Text,Alert
 } from "react-native";
 import { getPurchaseOrder, getResources, getClients, deletePurchaseOrders } from "../../../Redux/Actions/PurchaseOrderAction"
 import { useSelector, useDispatch } from "react-redux";
@@ -53,8 +53,21 @@ const PurchaseOrder = ({ navigation }) => {
         setFilterPurchaseData(reducerData.purchaseorderData)
       setLoading(false)
     }
-
   }, [reducerData.purchaseorderData])
+
+  // useEffect(()=>{
+  //   if(filterPurchaseData == undefined){
+  //     setLoading(false)
+  //     setError(true)
+  //   }
+  //   else{
+  //     setError(false)
+  //   }
+  // },[reducerData.getPurchaseOrder])
+   
+
+  console.log("errorssssssss=>>>>>>>",error)
+
 
   useEffect(() => {
     getPurchaseOrderFilterData();
@@ -64,7 +77,6 @@ const PurchaseOrder = ({ navigation }) => {
     const unsubscribe = navigation.addListener('blur', () => {
       setLoading(true);
       setFilterPurchaseData(null)
-      setError(null);
     });
     return unsubscribe;
   }, [navigation, dispatch]);
@@ -95,14 +107,15 @@ const PurchaseOrder = ({ navigation }) => {
   }
 
   const deletePurchaseOrder = (id) => {
+    console.log("deletpurchase=>>>>>>",id)
     dispatch(deletePurchaseOrders(id))
     setSearch('');
     const remaningData = purchaseOrder.filter(t => t.id !== id);
     setFilterPurchaseData([...remaningData]);
+    // )
   }
 
   const setSearchValue = value => {
-  
     setSearch(value);
   };
   console.log("gdgddfdfdffdf", !loading && purchaseOrder && purchaseOrder.length < 0)
@@ -124,7 +137,7 @@ const PurchaseOrder = ({ navigation }) => {
         </View>
       )}
 
-      {!loading && error && (
+      {!loading&& error && (
         <View style={styles.loadingContainer}>
           <Text> Something Went Wrong</Text>
         </View>

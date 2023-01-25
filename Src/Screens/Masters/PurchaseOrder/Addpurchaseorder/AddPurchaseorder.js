@@ -33,8 +33,8 @@ export default function AddPurchaseorder({navigation}) {
   const [clientopen, setclientopen] = useState(false);
   const [clientValue, setclientValue] = useState(null);
   const [clientItems, setclientItems] = useState([]);
-  // const [resourcevalue, setResourcevalueValue] = useState(null);
-  // const [resourceItem, setResourceItem] = useState([]);
+  const [resourcevalue, setResourcevalueValue] = useState(null);
+  const [resourceItem, setResourceItem] = useState([]);
   // const [OrderNumber,setOrderNumber]=useState({ordernumber:""})
   const [date, setDate] = useState({
     startDate: new Date(Date.now()),
@@ -92,12 +92,12 @@ export default function AddPurchaseorder({navigation}) {
     console.log("presssssssssssssssss")
     const resumeError = validation.validatefile(formData.resume?.uri);
     const clientError = validation.validateField(formData.client);
-    // const resourceError = validation.validateField(formData.resource);
+    const resourceError = validation.validateField(formData.resource);
     const startDateError = validation.validateField(formData.startDate);
     const EndDateError = validation.validateField(formData.EndDate);
     const OrderError=validation.validateField(formData.Order)
     if(
-      // resourceError||
+      resourceError||
       clientError||
       resumeError||
       startDateError||
@@ -106,7 +106,7 @@ export default function AddPurchaseorder({navigation}) {
     ){
       dispatcher({type: 'resumeError', payload:resumeError});
       dispatcher({type: 'clientError', payload:clientError});
-      // dispatcher({type: 'resourceError', payload:resourceError});
+      dispatcher({type: 'resourceError', payload:resourceError});
       dispatcher({type: 'startDateError', payload:startDateError});
       dispatcher({type: 'EndDateError', payload:EndDateError});   
       dispatcher({type: 'OrderError', payload:OrderError});   
@@ -115,46 +115,51 @@ export default function AddPurchaseorder({navigation}) {
 
     dispatcher({type: 'resumeError', payload:null});
       dispatcher({type: 'resumeError', payload:null});
-      // dispatcher({type: 'resourceError', payload:null});
+      dispatcher({type: 'resourceError', payload:null});
       dispatcher({type: 'startDateError', payload:null});
       dispatcher({type: 'EndDateError', payload:null});
       dispatcher({type: 'clientError', payload:null});
       dispatcher({type: 'OrderError', payload:null});
      
-      const ReFormdata={
-        client_name:formData.client,
-        order_number:formData.Order,
-        start_date:formData.startDate,
+      const ReFormdata={ 
+        client_id:340,
+        clients:{id: 340, client_name:formData.client},
+        created_at:"2023-01-25T09:49:43.000",
+        deleted_at :false,
+        description: null,
         end_date:formData.EndDate,
-        pdf_file:formData.resume
+        start_date:formData.startDate,
+        order_number:formData.Order,
+        pdf_file:[formData.resume]
+        id:709,
       }
       console.log("formData=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",ReFormdata)
 
       dispatch(addPurchaseOrder(ReFormdata,navigation))
   }
 
-//   const ResourceList = () => {
-//    console.log("resffsdg",reducerdata.getResorceData)
-//    if (reducerdata.getResorceData != null) {
-//     let newArray = [];
-//     for ( var i of reducerdata.getResorceData) {
-//       console.log("i=>>>>>>>>>>>>>>>>>>",i)
-//         let item;
-//         if(i.fname || i.lname ){
-//           if (i.fname && i.lname !== null) {
-//             console.log("ifname,lname",i.fname,i.lname)
-//              item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
-//          }
-//          newArray.push(item);
-//         }  
-//     }
-//     setResourceItem(newArray); 
-// }
-//   }
+  const ResourceList = () => {
+  //  console.log("resffsdg",reducerdata.getResorceData)
+   if (reducerdata.getResorceData != null) {
+    let newArray = [];
+    for ( var i of reducerdata.getResorceData) {
+      // console.log("i=>>>>>>>>>>>>>>>>>>",i)
+        let item;
+        if(i.fname || i.lname ){
+          if (i.fname && i.lname !== null) {
+            // console.log("ifname,lname",i.fname,i.lname)
+             item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
+         }
+         newArray.push(item);
+        }  
+    }
+    setResourceItem(newArray); 
+}
+  }
 
-//   useEffect(() => {
-//     ResourceList();
-//   }, [reducerdata.getResorceData]);
+  useEffect(() => {
+    ResourceList();
+  }, [reducerdata.getResorceData]);
 
   useEffect(() => {
     ClientList();
@@ -168,11 +173,11 @@ export default function AddPurchaseorder({navigation}) {
       let newArray1 = [];
       // console.log("jdhfuiiiiiiiii=????????",reducerdata.getClientData);
       for ( var i of reducerdata.getClientData) {
-        console.log("i=>>>>>>>>>>>>>>>>>>cientssssssssss",i)
+        // console.log("i=>>>>>>>>>>>>>>>>>>cientssssssssss",i)
           let item;
           if(i.client_name ){
             if (i.client_name  !== null) {
-              console.log("i.client_name",i.client_name)
+              // console.log("i.client_name",i.client_name)
                item = { id: i.id, label: `${i.client_name }`, value: i.id };
            }
            newArray1.push(item);
@@ -199,9 +204,12 @@ export default function AddPurchaseorder({navigation}) {
   const convertDateToSend = value => {
     const currentDate = value || date;
     let tempDate = new Date(currentDate);
+    console.log("TEMPDATE :",tempDate);
     let month = '' + (tempDate.getMonth() + 1),
       day = '' + tempDate.getDate(),
       year = tempDate.getFullYear();
+
+      console.log("DATE :_",month, day,year)
 
     if (month.length < 2) {
       month = '0' + month;
@@ -209,7 +217,7 @@ export default function AddPurchaseorder({navigation}) {
     if (day.length < 2) {
       day = '0' + day;
     }
-
+console.log([year, month, day].join('-'))
     return [year, month, day].join('-');
   };
 
@@ -227,7 +235,7 @@ export default function AddPurchaseorder({navigation}) {
 
     dispatcher({
       type: 'startDate',
-      payload:convertDateToSend(displayDate.startDate),
+      payload:convertDateToSend(value),
     });
     dispatcher({
       type: 'startDateError',
@@ -248,7 +256,7 @@ export default function AddPurchaseorder({navigation}) {
 
     dispatcher({
       type: 'EndDate',
-      payload:convertDateToSend(displayDate.endDate),
+      payload:convertDateToSend(value),
     });
     dispatcher({
       type: 'EndDateError',
@@ -284,11 +292,11 @@ export default function AddPurchaseorder({navigation}) {
           dropDownContainerStyle={style.dropDownContainerStyle}
           listMode="FLATLIST"
           renderListItem={({item}) => {
-            console.log('rendderCliennnt', item);
+            // console.log('rendderCliennnt', item);
             return (
               <TouchableOpacity
               onPress={()=>{
-                console.log("payload Client=>>>>",item)
+                // console.log("payload Client=>>>>",item)
                 setclientValue(item.value)
                 setclientopen(false)
                 dispatcher({type:"client",payload:item.label})
@@ -311,21 +319,21 @@ export default function AddPurchaseorder({navigation}) {
         {formData.clientError !== null && (
               <Text style={style.errorText}>{formData.clientError}</Text>
             )}
-        {/* <DropDownPicker
+        <DropDownPicker
           style={[style.dropdownViewStyle,{marginTop:25}]}
           placeholder="resources Name*"
           dropDownContainerStyle={style. dropDownContainerStyle}
         listMode="FLATLIST"
           renderListItem={({item})=>{
-            console.log("rendderlistad>>>>>>>>>>",item)
+            // console.log("rendderlistad>>>>>>>>>>",item)
             return(
               <TouchableOpacity 
               onPress={()=>{
-                console.log("payload resources=>>>>",item)
+                // console.log("payload resources=>>>>",item)
                 setResourcevalueValue(item.value)
                 setResourceOpen(false)
                 dispatcher({type:"resource",payload:item.label})
-                 dispatcher({
+                dispatcher({
               type:"resourceError",
               payload:validation.validateField(item.value)
              })
@@ -345,7 +353,7 @@ export default function AddPurchaseorder({navigation}) {
       
           {formData.resourceError !== null && (
               <Text style={style.errorText}>{formData.resourceError}</Text>
-            )} */}
+            )}
         <TextInput
           placeholder="Order Number*"
           style={[GLOBALSTYLE.TextInputStyle, {marginTop: 25}]}

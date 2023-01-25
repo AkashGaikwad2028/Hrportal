@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, View, Text, StyleSheet,Dimensions,Alert,Linking } from 'react-native';
+import { FlatList, View, Text, StyleSheet,Dimensions,Alert,Linking,Modal,TouchableOpacity} from 'react-native';
 import {GLOBALSTYLE} from "../../../Constants/Styles"
 import { COLORS } from '../../../Constants/Theme';
 import SmallButton from "../../../Components/SmallButton"
@@ -8,47 +8,35 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
-function PurchaseOrderList({ data,editPurchaseOrder, deletePurchaseOrder}) {
+function PurchaseOrderList({ data,editPurchaseOrder,navigation, deletePurchaseOrder}) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [DeletmodalVisible, setDeletmodalVisible] = useState(false);
   const [PdfData,setPdfData]=useState('')
   console.log('modalVisible',modalVisible)
- 
-  const onPressPurchaseOrder = url => {
-    if (url === null || url === undefined) {
-      Alert.alert(' ', 'Unable to download the document', [
-        {
-          text: 'OK',
-          style: 'cancel',
-        },
-      ]);
-      return;
-    }
-    Alert.alert('Download', 'Please download document here', [
-      {
-        text: 'Yes, Download',
-        onPress: () => {
-          Linking.canOpenURL(url).then(supported => {
-            console.log(supported);
-            if (supported) {
-              Linking.openURL(url);
-            } else {
-              // console.log("Don't know how to open URI: " + getDownloadLinkSuccess.downloadLink);
-            }
-          });
-        },
-      },
-      {
-        style: 'cancel',
-        text: 'No',
-      },
-    ]);
+  const [disabel,setDisabel]=useState(false)
+
+const closeModal=()=>{
+    console.log(modalVisible,"modalVisible")
+    setDeletmodalVisible(false)
+  }
+  console.log('deletemodalVisible',DeletmodalVisible)
+  const closeModalHandler = () => {
+    setModalVisible(!modalVisible);
+    // console.log('----MODAL CLOSED!----');
   };
 
+  // const closeModalHandler1 = () => {
+  //   setDeletmodalVisible(false);
+  //   // console.log('----MODAL CLOSED!----');
+  // };
+
   const _renderItem = ({ item }) => {
+
+    console.log(item)
     // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
-      {/* <SafeAreaView style={GLOBALSTYLE.mainContainer}>
+     <SafeAreaView style={GLOBALSTYLE.mainContainer}>
       <Modal
 animationType="slide"
 transparent={true} 
@@ -57,10 +45,38 @@ onRequestClose={() => {
   Alert.alert("Modal has been closed.");
   setModalVisible(!modalVisible);}}
 >
-<ViewPdf  pdfdata={PdfData} />
-<Text onPress={() =>( setModalVisible(false))} style={{color:"red"}}>cancel</Text>
-</Modal> */}
-{/* </SafeAreaView> */}
+<ViewPdf  
+pdfdata={PdfData} 
+onCancel={closeModalHandler}
+navigation={navigation}
+/>
+</Modal> 
+</SafeAreaView> 
+<Modal
+        animationType="fade"
+        transparent={true}
+       
+        visible={DeletmodalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setDeletmodalVisible(!DeletmodalVisible);
+        }}>
+          <View style={styles.modalContainer}>
+        <View  style={styles.modal}>
+          <View>
+           <Text style={{textAlign:"center",fontSize:25}}>YOU ARE SURE</Text>
+          </View>
+          <View>
+            <Text style={{textAlign:"center",fontSize:25}}>are you sur you want to delete</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={()=>{ deletePurchaseOrder(item.id)}} style={styles.cancelBtn}><Text>Delete</Text></TouchableOpacity>
+            <TouchableOpacity onPress={closeModal} style={styles.cancelBtn}><Text>cancel</Text></TouchableOpacity>
+          </View>
+        </View>
+        </View>
+      </Modal>
+
       <View style={[GLOBALSTYLE.cardView]}>
           <View style={(item.resources[0].fname.length + item.resources[0].lname.length)>12 ? GLOBALSTYLE.columnView :GLOBALSTYLE.rowView }>
         {item.clients.client_name && ( 
@@ -87,7 +103,16 @@ onRequestClose={() => {
 
            {item.pdf_file && ( <View style={GLOBALSTYLE.columnView}>
             <Text style={GLOBALSTYLE.label}>Pdf File</Text>
-            <Text  onPress={() => onPressPurchaseOrder(item.pdf_file.toString())}>View</Text>
+            <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
+                    setPdfData(item.pdf_file);
+                    // console.log('----VIEW CLIKED!----');
+                  }}>
+                  <Text style={[GLOBALSTYLE.text, {color: COLORS.lightBlue}]}>
+                    View
+                  </Text>
+                </TouchableOpacity>
          </View>
           )}
         </View>
@@ -118,8 +143,8 @@ onRequestClose={() => {
           <View style={[styles.innerViewStyle]}>
             <SmallButton color={COLORS.red}
               title={'Delete'}
-              onPressFunction={() => {
-              deletePurchaseOrder(item.id)
+             onPressFunction={() => {
+              setDeletmodalVisible(true)
             }}
             />
           </View>
@@ -180,7 +205,32 @@ const styles = StyleSheet.create({
     flex:1,
     width:Dimensions.get('window').width,
     height:Dimensions.get('window').height,
-}
+},
+modal:{
+  backgroundColor:"red",
+  width:"80%",
+  paddingHorizontal:30,
+  paddingVertical:60,
+  borderRadius:5
+  },
+  cancelBtn:{
+    backgroundColor:"white",
+    paddingHorizontal:30,
+    paddingVertical:10,
+    marginHorizontal:10,
+    marginVertical:10
+  },
+  buttonContainer:{
+    flexDirection:"row",
+    fontSize:25,
+    borderRadius:5
+  },
+  modalContainer:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+  
+  }
 });
 
 // setPdfData(item.pdf_file);

@@ -19,7 +19,7 @@ import{
 import request from "../../Util/request"
 import Toast from 'react-native-simple-toast';
 
-export function getPurchaseOrder() {
+export function getPurchaseOrder(error) {
     return async dispatch => {
       dispatch(
         purchaseOrderDispatch({isLoading: true},  FETCHPURCHASEORDER_PROGRESS),
@@ -32,11 +32,10 @@ export function getPurchaseOrder() {
         );
       } catch (error) {
         console.log('Purchase error', error);
-        dispatch(error, FETCHPURCHASEORDER_FAIL);
+        dispatch(error, FETCHPURCHASEORDER_FAIL );
       }
     };
   }
-
 
   export function getResources() {
     return async dispatch => {
@@ -95,6 +94,7 @@ export function getPurchaseOrder() {
   }
 
   export function deletePurchaseOrders(values) {
+    console.log("valuesssssssssssss=>>>>>>>>>>>",values)
     return async dispatch => {
         dispatch(purchaseOrderDispatch({}, DELETEPURCAHSEORDER_PROGRESS));
         try {
@@ -102,13 +102,13 @@ export function getPurchaseOrder() {
                 url: `/purchase/${values}`,
                 method: 'DELETE',
             });
-            console.log('DELETEPURCAHSEORDER', data.data);
+            console.log('DELETEPURCAHSEORDER=>>>>>>>>>>>', data.data.message);
             if (data.data.message) {
-                dispatch(purchaseOrderDispatch(data, DELETEPURCAHSEORDER_SUCCESS));
+                dispatch(purchaseOrderDispatch( data.url, DELETEPURCAHSEORDER_SUCCESS));
                 Toast.show('DELETEPURCAHSEORDER deleted Successfully');
             }
         } catch (err) {
-            console.log('deleteVendor error', err);
+            console.log('DELETEPURCAHSEORDER err', err);
             dispatch(purchaseOrderDispatch(err, DELETEPURCAHSEORDER_FAIL));
             Toast.show('DELETEPURCAHSEORDER Not deleted Successfully');
         }

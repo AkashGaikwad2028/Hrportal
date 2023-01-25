@@ -11,7 +11,7 @@ const initalState = {
 
 const RequestClientReducer = (state = initalState, action) => {
 
-    console.log("ReasonReducer", action)
+    // console.log("ReasonReducer", action)
     switch (action.type) {
         case FETCHREQUESTCLIENT_PROGRESS:
         return {
@@ -19,7 +19,7 @@ const RequestClientReducer = (state = initalState, action) => {
           isLoading: true,
         };
       case FETCHREQUESTCLIENT_SUCCESS:
-        console.log("fetchSuccesclient",action.payload)
+        // console.log("fetchSuccesclient",action.payload)
         return {
           ...state,
           isLoading: false,

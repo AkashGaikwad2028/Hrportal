@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import Pdf from 'react-native-pdf';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {View, Text, StyleSheet, Dimensions,Linking,FlatList,TouchableOpacity,Alert} from 'react-native';
+import SmallButton from '../../../Components/SmallButton';
+import { COLORS } from '../../../Constants/Theme';
+import { GLOBALSTYLE } from '../../../Constants/Styles';
+// import Pdf from 'react-native-pdf';
+// import {SafeAreaView} from 'react-native-safe-area-context';
 
-const ViewPdf = ({pdfdata}) => {
+const ViewPdf = ({pdfdata,onCancel,navigation}) => {
 // const [pdfs,setPdfs]=useState('')
 //     console.log("pdfData-----------",pdfdata)
 //     if(pdfdata!==undefined){
@@ -11,54 +14,117 @@ const ViewPdf = ({pdfdata}) => {
 //     }
 
     // console.log("pdfssss-----------------",pdfs)
-  const source = {
-    uri:[pdfdata],
-    cache: true,
+  // const source = {
+  //   uri:[pdfdata],
+  //   cache: true,
+  // };
+
+  const onPressPurchaseOrder = url => {
+    if (url === null || url === undefined) {
+      Alert.alert(' ', 'Unable to download the document', [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ]);
+      return;
+    }
+    Alert.alert('Download', 'Please download document here', [
+      {
+        text: 'Yes, Download',
+        onPress: () => {
+          Linking.canOpenURL(url).then(supported => {
+            console.log(supported);
+            if (supported) {
+              Linking.openURL(url);
+            } else {
+              // console.log("Don't know how to open URI: " + getDownloadLinkSuccess.downloadLink);
+            }
+          });
+        },
+      },
+      {
+        style: 'cancel',
+        text: 'No',
+      },
+    ]);
   };
 
   return (
-    <SafeAreaView  style={styles.container}>
-      <View style={styles.container}>
-        <Pdf
-          trustAllCerts={false}
-          source={source}
-          onLoadComplete={(numberOfPages, filePath) => {
-            console.log(`Number of pages: ${numberOfPages}`);
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        <View style={styles.flatListContainer}>
+          <FlatList
+            data={pdfdata}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => {
+                  onPressPurchaseOrder(item.toString().trim());
+                }}>
+                <Text style={styles.modalText}>
+                  {item !== ''
+                    ? `\u2022 ${item.toString().split('_').pop()}`
+                    : null}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+        <SmallButton
+          color={COLORS.grey}
+          title={'Cancel'}
+          onPressFunction={() => {
+            onCancel();
           }}
-          onPageChanged={(page, numberOfPages) => {
-            console.log(`Current page: ${page}`);
-          }}
-          onError={error => {
-            console.log(error);
-          }}
-          onPressLink={uri => {
-            console.log(`Link pressed: ${uri}`);
-          }}
-          style={styles.pdf}
+          style={{flex: 1}}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default ViewPdf;
 
-const styles = StyleSheet.create({
-  container: {
-    flex:1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 65,
-  },
 
-  color:{
-    color:"red"
-  },
-  pdf: {
+const styles = StyleSheet.create({
+  centeredView: {
     flex: 1,
-    width:"80%",
-    // width: Dimensions.get('window').width,
-    // height: Dimensions.get('window').height,
-    backgroundColor:"yellow"
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    // margin: 20,
+    height: 250,
+    width: 270,
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    paddingVertical: 35,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    color: COLORS.blue,
+    fontSize: 20,
+    // fontWeight: 'bold',
+    // textAlign: 'center',
+  },
+  onPress: {color: COLORS.blue},
+  flatListContainer: {
+    maxHeight: 200,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
 });
