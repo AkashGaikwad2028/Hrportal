@@ -120,18 +120,18 @@ export default function AddPurchaseorder({navigation}) {
       dispatcher({type: 'EndDateError', payload:null});
       dispatcher({type: 'clientError', payload:null});
       dispatcher({type: 'OrderError', payload:null});
+
+    //  ( formData.client.id)
+     console.log( formData.id)
      
       const ReFormdata={ 
-        client_id:340,
-        clients:{id: 340, client_name:formData.client},
-        created_at:"2023-01-25T09:49:43.000",
-        deleted_at :false,
-        description: null,
-        end_date:formData.EndDate,
-        start_date:formData.startDate,
-        order_number:formData.Order,
-        pdf_file:[formData.resume]
-        id:709,
+        "id":987,
+      "client_id":formData.client,
+       "resource_id":formData.resource,
+       "order_number":formData.Order,
+       "start_date":formData.startDate,
+       "end_date":formData.EndDate,
+       "pdf_file":"http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf"
       }
       console.log("formData=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",ReFormdata)
 
@@ -299,10 +299,10 @@ console.log([year, month, day].join('-'))
                 // console.log("payload Client=>>>>",item)
                 setclientValue(item.value)
                 setclientopen(false)
-                dispatcher({type:"client",payload:item.label})
+                dispatcher({type:"client",payload:item.id})
                  dispatcher({
               type:"clientError",
-              payload:validation.validateField(item.label)
+              payload:validation.validateField(item.value)
              })
               }}
                 style={style.cellStyle}>
@@ -325,14 +325,14 @@ console.log([year, month, day].join('-'))
           dropDownContainerStyle={style. dropDownContainerStyle}
         listMode="FLATLIST"
           renderListItem={({item})=>{
-            // console.log("rendderlistad>>>>>>>>>>",item)
+            // console.log("rendderlistad>>>>>>>>>>",item.id)
             return(
               <TouchableOpacity 
               onPress={()=>{
                 // console.log("payload resources=>>>>",item)
                 setResourcevalueValue(item.value)
                 setResourceOpen(false)
-                dispatcher({type:"resource",payload:item.label})
+                dispatcher({type:"resource",payload:item.id})
                 dispatcher({
               type:"resourceError",
               payload:validation.validateField(item.value)

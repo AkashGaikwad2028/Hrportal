@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Configure';
 import NavigationServices from '../Navigation/Rootroute/navigation_reference';
 
-const client = axios.create({
+export const client = axios.create({
     // baseURL:'http://newresourcing.nimapinfotech.com/api',
     baseURL: BASE_URL,
     headers: {
@@ -60,7 +60,9 @@ const request = async options => {
     };
 
     try {
-        const response = await client(options);
+        console.log("in inner try" , options)
+        const response = await client.post("/purchase" , options);
+        console.log("response in inner try" , response)
         return onSuccess(response);
     } catch (error) {
         return onError(error);

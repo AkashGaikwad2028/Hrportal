@@ -27,7 +27,7 @@ export function updateVendor(formData, id, navigation) {
             console.log('updateVendor response', data.data);
             if (data.message) {
                 dispatch(vendorMasterDispatch(data, EDITVENDOR_SUCCESS));
-                Toast.show(' Vendor Updated Successfully');
+                Toast.show('Vendor Updated Successfully');
             }
             navigation.goBack();
 

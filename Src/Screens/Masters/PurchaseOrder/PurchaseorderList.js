@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text, StyleSheet,Dimensions,Alert,Linking,Modal,TouchableOpacity} from 'react-native';
 import {GLOBALSTYLE} from "../../../Constants/Styles"
 import { COLORS } from '../../../Constants/Theme';
@@ -12,7 +12,7 @@ function PurchaseOrderList({ data,editPurchaseOrder,navigation, deletePurchaseOr
   const [modalVisible, setModalVisible] = useState(false);
   const [DeletmodalVisible, setDeletmodalVisible] = useState(false);
   const [PdfData,setPdfData]=useState('')
-  console.log('modalVisible',modalVisible)
+  // console.log('modalVisible',modalVisible)
   const [disabel,setDisabel]=useState(false)
 
 const closeModal=()=>{
@@ -25,6 +25,8 @@ const closeModal=()=>{
     // console.log('----MODAL CLOSED!----');
   };
 
+  
+
   // const closeModalHandler1 = () => {
   //   setDeletmodalVisible(false);
   //   // console.log('----MODAL CLOSED!----');
@@ -32,7 +34,7 @@ const closeModal=()=>{
 
   const _renderItem = ({ item }) => {
 
-    console.log(item)
+    // console.log(item)
     // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
