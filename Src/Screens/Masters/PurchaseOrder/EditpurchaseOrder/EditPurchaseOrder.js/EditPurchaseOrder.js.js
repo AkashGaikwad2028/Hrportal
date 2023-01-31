@@ -20,11 +20,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { initalState,editreducer } from '../editPurchaseFormData';
 import validation from '../../../../../Util/helper';
+import {updatePurchaseOrder} from "../../../../../Redux/Actions/PurchaseOrderAction"
 import Toast from 'react-native-simple-toast';
 
-export default function EditPurchaseOrder({route}) {
+export default function EditPurchaseOrder({route,navigation}) {
   const params=route.params.newData
-  console.log("params =>>>",params.clients.client_name)
+  console.log("params =>>>",params.id)
+  const idf=params.id
   const dispatch = useDispatch();
   const reducerdata = useSelector(state => state.PurchaseOrderReducer);
   const [selectedValue, setSelectedValue] = useState("Option 1");
@@ -33,6 +35,7 @@ export default function EditPurchaseOrder({route}) {
   const [formData, dispatcher] = useReducer(editreducer,initalState);
   const [resourceopen, setResourceOpen] = useState(false);
   const [clientopen, setclientopen] = useState(false);
+  // const [ ResourcevalueValue,setResourcevalueValue]= useState(false)
   // const [valve,setvalve]=useState(params.clients.client_name)
   const [clientValue, setclientValue] = useState("akashhhhh");
   const [clientItems, setclientItems] = useState([]);
@@ -101,15 +104,15 @@ export default function EditPurchaseOrder({route}) {
 
 
   const onSubmit = () => {
-    console.log("presssssssssssssssss")
+    console.log("presssssssssssssssss",params.id)
     const resumeError = validation.validatefile(formData.resume?.uri);
     const clientError = validation.validateField(formData.client);
-    // const resourceError = validation.validateField(formData.resource);
+    const resourceError = validation.validateField(formData.resource);
     const startDateError = validation.validateField(formData.startDate);
     const EndDateError = validation.validateField(formData.EndDate);
     const OrderError=validation.validateField(formData.Order)
     if(
-      // resourceError||
+      resourceError||
       clientError||
       resumeError||
       startDateError||
@@ -118,7 +121,7 @@ export default function EditPurchaseOrder({route}) {
     ){
       dispatcher({type: 'resumeError', payload:resumeError});
       dispatcher({type: 'clientError', payload:clientError});
-      // dispatcher({type: 'resourceError', payload:resourceError});
+      dispatcher({type: 'resourceError', payload:resourceError});
       dispatcher({type: 'startDateError', payload:startDateError});
       dispatcher({type: 'EndDateError', payload:EndDateError});   
       dispatcher({type: 'OrderError', payload:OrderError});   
@@ -127,46 +130,49 @@ export default function EditPurchaseOrder({route}) {
 
     dispatcher({type: 'resumeError', payload:null});
       dispatcher({type: 'resumeError', payload:null});
-      // dispatcher({type: 'resourceError', payload:null});
+      dispatcher({type: 'resourceError', payload:null});
       dispatcher({type: 'startDateError', payload:null});
       dispatcher({type: 'EndDateError', payload:null});
       dispatcher({type: 'clientError', payload:null});
       dispatcher({type: 'OrderError', payload:null});
      
-      const ReFormdata={
-        client_name:formData.client,
-        order_number:formData.Order,
-        start_date:formData.startDate,
-        end_date:formData.EndDate,
-        pdf_file:formData.resume
-      }
+      const ReFormdata =new FormData();
+      ReFormdata.append('resource_id', '341');
+      ReFormdata.append('client_id', '2');
+      ReFormdata.append('order_number','986769');
+      ReFormdata.append('start_date', '2022-14-02');
+      ReFormdata.append('end_date', '2022-19-02');
+      ReFormdata.append('title', 'Slang');
+      ReFormdata.append('description', 'A Unseen Gamer');
+      ReFormdata.append('pdf_file','http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf');
       console.log("formData=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",ReFormdata)
 
       // dispatch(addPurchaseOrder(ReFormdata,navigation))
+      dispatch(updatePurchaseOrder(ReFormdata,params.id,navigation))
   }
 
-//   const ResourceList = () => {
-//    console.log("resffsdg",reducerdata.getResorceData)
-//    if (reducerdata.getResorceData != null) {
-//     let newArray = [];
-//     for ( var i of reducerdata.getResorceData) {
-//       console.log("i=>>>>>>>>>>>>>>>>>>",i)
-//         let item;
-//         if(i.fname || i.lname ){
-//           if (i.fname && i.lname !== null) {
-//             console.log("ifname,lname",i.fname,i.lname)
-//              item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
-//          }
-//          newArray.push(item);
-//         }  
-//     }
-//     setResourceItem(newArray); 
-// }
-//   }
+  const ResourceList = () => {
+   console.log("resffsdg",reducerdata.getResorceData)
+   if (reducerdata.getResorceData != null) {
+    let newArray = [];
+    for ( var i of reducerdata.getResorceData) {
+      console.log("i=>>>>>>>>>>>>>>>>>>",i)
+        let item;
+        if(i.fname || i.lname ){
+          if (i.fname && i.lname !== null) {
+            console.log("ifname,lname",i.fname,i.lname)
+             item = { id: i.id, label: `${i.fname} ${i.lname}`, value: i.id };
+         }
+         newArray.push(item);
+        }  
+    }
+    setResourceItem(newArray); 
+}
+  }
 
-//   useEffect(() => {
-//     ResourceList();
-//   }, [reducerdata.getResorceData]);
+  useEffect(() => {
+    ResourceList();
+  }, [reducerdata.getResorceData]);
 
   useEffect(() => {
     ClientList();
@@ -334,9 +340,9 @@ export default function EditPurchaseOrder({route}) {
               <TouchableOpacity 
               onPress={()=>{
                 console.log("payload resources=>>>>",item)
-                setResourcevalueValue(item.value)
+                setResourcevalue(item.value)
                 setResourceOpen(false)
-                dispatcher({type:"resource",payload:item.label})
+                dispatcher({type:"resource",payload:item.id})
                  dispatcher({
               type:"resourceError",
               payload:validation.validateField(item.value)
@@ -450,7 +456,7 @@ export default function EditPurchaseOrder({route}) {
         <TouchableOpacity
               style={style.btnStyles}
               onPress={() => {
-                onSubmit();
+                onSubmit(idf);
               }}
               >
               <Text style={style.submitBtnTextStyle}>Submit</Text>

@@ -14,12 +14,12 @@ const initalState={
 }
 
 const reducer = (state, action) => {
-  console.log("action",action)
+  console.log("action",action.payload)
     switch (action.type) {
         case 'resume':
       return {
         ...state,
-        resume: action.payload,
+        resume:action.payload,
       };
 
       case 'resumeError':

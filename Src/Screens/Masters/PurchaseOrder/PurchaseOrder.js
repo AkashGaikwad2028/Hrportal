@@ -66,7 +66,7 @@ const PurchaseOrder = ({ navigation }) => {
   // },[reducerData.getPurchaseOrder])
    
 
-  console.log("errorssssssss=>>>>>>>",error)
+  // console.log("errorssssssss=>>>>>>>",error)
 
 
   useEffect(() => {
@@ -112,13 +112,12 @@ const PurchaseOrder = ({ navigation }) => {
     setSearch('');
     const remaningData = purchaseOrder.filter(t => t.id !== id);
     setFilterPurchaseData([...remaningData]);
-    // )
   }
 
   const setSearchValue = value => {
     setSearch(value);
   };
-  console.log("gdgddfdfdffdf", !loading && purchaseOrder && purchaseOrder.length < 0)
+  // console.log("gdgddfdfdffdf", !loading && purchaseOrder && purchaseOrder.length < 0)
   const editPurchaseOrder = (data) => {
     console.log("EditPurchaseOrder")
     navigation.navigate('EditPurchaseOrder', { newData: data })
@@ -178,9 +177,3 @@ const styles = StyleSheet.create({
 
 export default PurchaseOrder
 
-
-
-
- // data.clients.client_name.toLowerCase().includes(search.toLowerCase()) ||
-                // data.resources[0].fname.toLowerCase().includes(search.toLowerCase()) ||
-                // data.resources[0].lname.toLowerCase().includes(search.toLowerCase()) ||

@@ -50,11 +50,14 @@ client.interceptors.response.use(
 );
 
 const requestformData = async options => {
+    console.log("rtequesstFormdataoptons",options)
     const onSuccess = response => {
+        console.log("rtequesstFormdataoptons=rresponse",response)
         return response;
     };
 
     const onError = error => {
+        console.log("requestformdata",error.message,error.response)
         return Promise.reject(error.response || error.message);
     };
 

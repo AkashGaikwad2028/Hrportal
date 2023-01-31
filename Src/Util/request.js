@@ -3,11 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Configure';
 import NavigationServices from '../Navigation/Rootroute/navigation_reference';
 
-export const client = axios.create({
+const client = axios.create({
     // baseURL:'http://newresourcing.nimapinfotech.com/api',
     baseURL: BASE_URL,
     headers: {
-        'Content-Type': 'application/json',
+        'Content-Type':'application/json',
         Accept: 'application/json',
     },
     timeout: 10000,
@@ -17,6 +17,7 @@ export const client = axios.create({
 client.interceptors.request.use(
     async config => {
         const token = await AsyncStorage.getItem('token');
+        console.log("Token For Authrization",token)
         if (token) {
             config.headers.Authorization = 'Bearer ' + token;
         }
@@ -30,6 +31,7 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
     function (response) {
+        console.log("Logout Response",response)
         return response;
     },
     async function (error) {
@@ -51,18 +53,21 @@ client.interceptors.response.use(
 );
 
 const request = async options => {
+    console.log("Request Option",options)
     const onSuccess = response => {
+        console.log("Onsuccessss",response)
         return response;
     };
 
     const onError = error => {
+        console.log("error response",error.response,error.message)
         return Promise.reject(error.response || error.message);
     };
 
     try {
-        console.log("in inner try" , options)
-        const response = await client.post("/purchase" , options);
-        console.log("response in inner try" , response)
+        console.log("options=>>>",options)
+        const response = await client(options);
+        console.log("response=68",response)
         return onSuccess(response);
     } catch (error) {
         return onError(error);

@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
+
 function PurchaseOrderList({ data,editPurchaseOrder,navigation, deletePurchaseOrder}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [DeletmodalVisible, setDeletmodalVisible] = useState(false);
@@ -27,18 +28,13 @@ const closeModal=()=>{
 
   
 
-  // const closeModalHandler1 = () => {
-  //   setDeletmodalVisible(false);
-  //   // console.log('----MODAL CLOSED!----');
-  // };
-
   const _renderItem = ({ item }) => {
 
     // console.log(item)
     // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
-     <SafeAreaView style={GLOBALSTYLE.mainContainer}>
+     <SafeAreaView style={[GLOBALSTYLE.mainContainer]}>
       <Modal
 animationType="slide"
 transparent={true} 
@@ -57,7 +53,6 @@ navigation={navigation}
 <Modal
         animationType="fade"
         transparent={true}
-       
         visible={DeletmodalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
@@ -66,20 +61,20 @@ navigation={navigation}
           <View style={styles.modalContainer}>
         <View  style={styles.modal}>
           <View>
-           <Text style={{textAlign:"center",fontSize:25}}>YOU ARE SURE</Text>
+           <Text style={{textAlign:"center",fontSize:25,color:"black",marginTop:10}}>YOU ARE SURE</Text>
           </View>
           <View>
-            <Text style={{textAlign:"center",fontSize:25}}>are you sur you want to delete</Text>
+            <Text style={{textAlign:"center",fontSize:18,marginTop:10}}>are you sure you want to delete ?</Text>
           </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={()=>{ deletePurchaseOrder(item.id)}} style={styles.cancelBtn}><Text>Delete</Text></TouchableOpacity>
-            <TouchableOpacity onPress={closeModal} style={styles.cancelBtn}><Text>cancel</Text></TouchableOpacity>
+          <View style={[styles.buttonContainer,{marginTop:10}]}>
+            <TouchableOpacity onPress={()=>{ deletePurchaseOrder(item.id),setDeletmodalVisible(!DeletmodalVisible)}} style={styles.DeletBtn}><Text style={{ color: COLORS.white,fontSize:18}}>Delete</Text></TouchableOpacity>
+            <TouchableOpacity onPress={closeModal} style={styles.cancelBtn}><Text style={{ color: COLORS.white,fontSize:18}}>cancel</Text></TouchableOpacity>
           </View>
         </View>
         </View>
       </Modal>
 
-      <View style={[GLOBALSTYLE.cardView]}>
+      <View style={[GLOBALSTYLE.cardView,{opacity:modalVisible ? 0.6:1}]}>
           <View style={(item.resources[0].fname.length + item.resources[0].lname.length)>12 ? GLOBALSTYLE.columnView :GLOBALSTYLE.rowView }>
         {item.clients.client_name && ( 
             <View style={ GLOBALSTYLE.columnView}>
@@ -209,29 +204,44 @@ const styles = StyleSheet.create({
     height:Dimensions.get('window').height,
 },
 modal:{
-  backgroundColor:"red",
+  backgroundColor:"white",
   width:"80%",
   paddingHorizontal:30,
   paddingVertical:60,
-  borderRadius:5
+  borderRadius:5,
+  shadowColor:"#c2c2a3",
+  shadowOffset: {width: -2, height: 0},
+  shadowOpacity: 25,
+  elevation: 20,
   },
   cancelBtn:{
-    backgroundColor:"white",
+    backgroundColor:"#707070",
     paddingHorizontal:30,
     paddingVertical:10,
+    marginHorizontal:10,
+    color:"white",
+    borderRadius:5,
+    marginVertical:10
+  },
+  DeletBtn:{
+    backgroundColor:"#FF0000",
+    paddingHorizontal:30,
+    paddingVertical:10,
+    borderRadius:5,
     marginHorizontal:10,
     marginVertical:10
   },
   buttonContainer:{
     flexDirection:"row",
     fontSize:25,
+    color:"white",
     borderRadius:5
   },
   modalContainer:{
     flex:1,
     justifyContent:"center",
     alignItems:"center",
-  
+    borderRadius:5,
   }
 });
 

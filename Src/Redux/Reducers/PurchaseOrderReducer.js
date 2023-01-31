@@ -13,7 +13,10 @@ import{
     GETCLIENT_SUCCESS,
     DELETEPURCAHSEORDER_PROGRESS,
     DELETEPURCAHSEORDER_SUCCESS,
-    DELETEPURCAHSEORDER_FAIL
+    DELETEPURCAHSEORDER_FAIL,
+    EDITURCHASEORDER_PROGRESS,
+    EDITPURCHASEORDER_SUCCESS,
+    EDITPURCHASEORDER_FAIL
 } from "../ActionConstant"
 // import { addPurchaseOrder } from "../Actions/PurchaseOrderAction";
 
@@ -23,6 +26,7 @@ const initalState = {
     addPurchaseOrder:{},
     getResorceData:{},
     getClientData:{},
+    editPurchaseOrder: {},
     deletePurchaseOrderResponse: {}
   };
 
@@ -116,6 +120,23 @@ const initalState = {
                 isLoading: false,
                 deletePurchaseOrderResponse: action.payload
             }
+            case EDITURCHASEORDER_PROGRESS:
+              return {
+                  ...state,
+                  isLoading: true
+              };
+          case  EDITPURCHASEORDER_SUCCESS:
+              return {
+                  ...state,
+                  isLoading: false,
+                  editPurchaseOrder: action.payload
+              };
+          case EDITPURCHASEORDER_FAIL:
+              return {
+                  ...state,
+                  isLoading: false,
+                  editPurchaseOrder:action.payload
+              }
       default:
         return state;
     }
