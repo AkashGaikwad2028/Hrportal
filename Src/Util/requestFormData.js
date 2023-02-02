@@ -3,20 +3,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Configure';
 import NavigationServices from '../Navigation/Rootroute/navigation_reference';
 
-const client = axios.create({
+export const client = axios.create({
     baseURL: BASE_URL,
     headers: {
-        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryD07UAHhgqXngVX8T',
-        // Accept: 'application/json',
+      "Content-Type":"multipart/form-data, "
+    //   "Accept":'application/pdf,'
     },
     timeout: 10000,
 });
 
 
+
 client.interceptors.request.use(
     async config => {
         const token = await AsyncStorage.getItem('token');
+        console.log("tokekk",token)
         if (token) {
+            console.log(" config",config)
             config.headers.Authorization = 'Bearer ' + token;
         }
         return config;
@@ -29,6 +32,7 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
     function (response) {
+        console.log("response=>>>>>>>>>>>>>",response)
         return response;
     },
     async function (error) {
@@ -49,24 +53,29 @@ client.interceptors.response.use(
     },
 );
 
-const requestformData = async options => {
-    console.log("rtequesstFormdataoptons",options)
-    const onSuccess = response => {
-        console.log("rtequesstFormdataoptons=rresponse",response)
-        return response;
-    };
+const onSuccess = (response) => {
+    console.log("response", response);
+    console.log("rtequesstFormdataoptons=rresponse", response);
+    return response;
+  };
 
-    const onError = error => {
-        console.log("requestformdata",error.message,error.response)
-        return Promise.reject(error.response || error.message);
-    };
+  const onError = (error) => {
+    console.log("requestformdata", error.message, error.response);
+    return Promise.reject(error.response || error.message);
+  };
 
+const requestformData = async (options) => {
+    console.log("rtequesstFormdataoptons", options);
     try {
         const response = await client(options);
         return onSuccess(response);
-    } catch (error) {
+      } catch (error) {
         return onError(error);
-    }
-};
+      }
+  
+  
+  
+  };
 
 export default requestformData;
+

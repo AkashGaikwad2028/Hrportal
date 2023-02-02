@@ -75,12 +75,12 @@ const validatefile = value => {
 
 const validation = {
   validateEmail,
-  numericValidation,
-  validateCharField,
   validateField,
   validateNotRequiredEmail,
   contactValidation,
+  validateCharField,
   validatefile,
+  numericValidation
 };
 
 export default validation;

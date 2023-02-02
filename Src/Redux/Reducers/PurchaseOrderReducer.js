@@ -26,7 +26,7 @@ const initalState = {
     addPurchaseOrder:{},
     getResorceData:{},
     getClientData:{},
-    editPurchaseOrder: {},
+    editPurchaseOrder:[],
     deletePurchaseOrderResponse: {}
   };
 
@@ -95,13 +95,13 @@ const initalState = {
           return {
             ...state,
             isLoading: false,
-            addPurchaseOrder: action.payload,
+            addPurchaseOrder:action.payload,
           };
         case  ADDPURCHASEORDER_FAIL:
           return {
             ...state,
             isLoading: false,
-            addPurchaseOrder: action.payload,
+            addPurchaseOrder:action.payload,
           };
           case  DELETEPURCAHSEORDER_PROGRESS:
             return {

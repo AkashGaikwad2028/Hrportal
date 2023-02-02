@@ -38,12 +38,12 @@ export const GLOBALSTYLE = StyleSheet.create({
     flex: 1
   },
   label: {
-    fontSize: 14,
+    fontSize: 17,
     color: COLORS.grey,
     padding: 2,
   },
   text: {
-    fontSize: 14,
+    fontSize: 17,
     color: COLORS.black,
     padding: 3,
     flexWrap: 'wrap',

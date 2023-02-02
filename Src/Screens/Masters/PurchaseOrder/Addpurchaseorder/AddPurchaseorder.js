@@ -31,13 +31,13 @@ export default function AddPurchaseorder({navigation}) {
   // console.log('reducerDataAdd', reducerdata.getResorceData);
   // console.log('reducerDataAdd', reducerdata.getResorceData)
   const [formData, dispatcher] = useReducer(reducer, initalState);
-  const [resourceopen, setResourceOpen] = useState(false);
+  // const [resourceopen, setResourceOpen] = useState(false);
+  // const [resourceValue, setResourceValue] = useState(null);
+  const [resourceItem, setResourceItem] = useState([]);
   const [clientopen, setclientopen] = useState(false);
   const [clientValue, setclientValue] = useState(null);
   const [clientItems, setclientItems] = useState([]);
-  const [Selected, setSelected] = useState([]);
-  const [resourceItem, setResourceItem] = useState([]);
-  // const [OrderNumber,setOrderNumber]=useState({ordernumber:""})
+  const [Selected,setSelected]=useState([])
   const [date, setDate] = useState({
     startDate: new Date(Date.now()),
     endDate: new Date(Date.now()),
@@ -56,21 +56,23 @@ export default function AddPurchaseorder({navigation}) {
 
   const selectResume = async (fileName, Error) => {
     try {
-      const file = await DocumentPicker.pickSingle({
+      let file = await DocumentPicker.pickSingle({
         type: [
           DocumentPicker.types.pdf,
-          DocumentPicker.types.docx,
           DocumentPicker.types.doc,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.docx
         ],
       });
+      console.log("file -------",file)
       dispatcher({
         type: fileName,
-        payload: {uri: file.uri, type: file.type, name: file.name},
+        payload: {file:file,name:file.name}
       });
 
       dispatcher({
         type: Error,
-        payload: validation.validatefile(file.uri),
+        payload: validation.validatefile(file),
       });
 
       if (file !== null) {
@@ -92,7 +94,7 @@ export default function AddPurchaseorder({navigation}) {
 
   const onSubmit = () => {
     console.log("presssssssssssssssss")
-    const resumeError = validation.validatefile(formData.resume?.uri);
+    const resumeError = validation.validatefile(formData.resume.file);
     const clientError = validation.validateField(formData.client);
     const resourceError = validation.validateField(formData.resource);
     const startDateError = validation.validateField(formData.startDate);
@@ -122,57 +124,61 @@ export default function AddPurchaseorder({navigation}) {
       dispatcher({type: 'EndDateError', payload:null});
       dispatcher({type: 'clientError', payload:null});
       dispatcher({type: 'OrderError', payload:null});
-      // fun()
+      fun(formData)
     //  ( formData.client.id)
-     console.log("formData",formData)
-     let data= convertData(formData)
-      dispatch(addPurchaseOrder(data,navigation))
+     console.log("formData",formData.resume)
+    //  let data= convertData(formData)
+      // dispatch(addPurchaseOrder(data,navigation))
   }
   
 
-  const convertData=formData=>{
-    const ReFormdata={ 
-      "id":987,
-    "client_id":formData.client.id,
-     "resource_id":[formData.resource.id],
-     "order_number":formData.Order.order_number,
-     "start_date":formData.startDate,
-     "end_date":formData.EndDate,
-     "pdf_file":"http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf"
-    }
-return ReFormdata
-  }
-//    let fun=()=> {
-//     console.log("function called")
-//     const newData = {
-//       "client_id":337,
-//        "resource_id":318,
-//        "order_number":"1234668",
-//        "start_date":"2022-14-02",
-//        "end_date":"2022-14-08",
-//        "title": "Slang",
-//        "description": "A Unseen Gamer",
-//        "pdf_file":"http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf"
-//     };
-//   var config = {
-//     method:'post',
-//     url: 'http://144.91.79.237:8905/api/purchase/',
-//     headers: {
-//       Authorization:
-//         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUzLCJlbWFpbCI6InRlc3RAbmltYXBpbmZvdGVjaC5jb20iLCJpYXQiOjE2NzUwNTAwMzIsImV4cCI6MTY3NTEzNjQzMn0.kWdKPX4VUoQDfpOM_wVlnHMNaJH4nCjpnotnGSVyrkY',
-//         'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryD07UAHhgqXngVX8T'
-//     },
-//     data:newData,
-//   };
+//   const convertData=formData=>{
+//     const newData=new FormData()
+//      newData.append('resource_id', [formData.resource.id]);
+//      newData.append('client_id', formData.client.id)
+//      newData.append('order_number',formData.Order.order_number);
+//      newData.append( "start_date",formData.startDate,);
+//      newData.append( "end_date",formData.EndDate);
+//      newData.append('title', 'Slang');
+//      newData.append('description', 'A Unseen Gamer');
+//      newData.append( "pdf_file",formData.resume);
+// return newData
+//   }
+   let fun=(formData)=> {
+    console.log("function inside",formData,formData.resume.file.uri)
+    console.log("function called")
+    const newData=new FormData()
+     newData.append('resource_id', [formData.resource.id]);
+     newData.append('client_id', formData.client.id)
+     newData.append('order_number',formData.Order.order_number);
+     newData.append( "start_date",formData.startDate,);
+     newData.append( "end_date",formData.EndDate);
+     newData.append('title', 'Slang');
+     newData.append('description', 'A Unseen Gamer');
+     newData.append( "pdf_file", {uri: formData.resume.file.uri, name: formData.resume.file.name, type: formData.resume.file.type});
+    ;
+  var config = {
+    method:'post',
+    url: 'http://144.91.79.237:8905/api/purchase',
+    maxBodyLength: Infinity,
+    headers: {
+      Authorization:' Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUzLCJlbWFpbCI6InRlc3RAbmltYXBpbmZvdGVjaC5jb20iLCJpYXQiOjE2NzUzMDc2MTYsImV4cCI6MTY3NTM5NDAxNn0.kby0SExmfPuH5VUTu1G15swGu8ulU4ck28hDjV0KDZI',
+        'Content-Type': 'multipart/form-data;application/pdf',
+        Accept:'application/JSON'
+    },
+    data:newData,
+  };
+  console.log("newData",newData)
 
-//   axios(config)
-//     .then(function (response) {
-//       console.log(JSON.stringify(response.data));
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-// };
+  axios(config)
+    .then(function (response) {
+      return response.json();
+      // console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error.message,error.response);
+    });
+};
 
 
 
@@ -181,7 +187,7 @@ return ReFormdata
    if (reducerdata.getResorceData != null) {
     let newArray = [];
     for ( var i of reducerdata.getResorceData) {
-      // console.log("i=>>>>>>>>>>>>>>>>>>",i)
+      console.log("i=>>>>>>>>>>>>>>>>>>",i)
         let item;
         if(i.fname || i.lname ){
           if (i.fname && i.lname !== null) {
@@ -302,8 +308,8 @@ console.log([year, month, day].join('-'))
     });
   }
 
-//   const addPosts = (ReFormdata, body,) => {
-//     console.log(ReFormdata)
+//   const addPosts = (newData, body,) => {
+//     console.log(newData)
 //     client
 //        .post('/purchase', {
            
@@ -329,13 +335,13 @@ console.log([year, month, day].join('-'))
     });
   }
 
+  // console.log("resourceValue", resourceValue,clientValue);
   // console.log("selectedddddddddd",Selected)
 
 
   // console.log("resourceitem=>>>>>>>>>>>>>",resourceItem)
   // console.log("resourceValue=>>>>>>>>>>>>>",resourcevalue)
   
-
   return (
     <SafeAreaView style={[GLOBALSTYLE.safeAreaViewStyle]}>
       <CustomNavigationBar
@@ -354,7 +360,7 @@ console.log([year, month, day].join('-'))
               <TouchableOpacity
               onPress={()=>{
                 // console.log("payload Client=>>>>",item)
-                console.log("item.value",item.value)
+                console.log("item.value",item.label)
                 setclientValue(item.value)
                 setclientopen(false)
                 dispatcher({type:"client",
@@ -382,8 +388,8 @@ console.log([year, month, day].join('-'))
               <Text style={style.errorText}>{formData.clientError}</Text>
             )}
             </View>
-            <View style={{marginTop:25,}}>
-        <MultipleSelectList
+            <View style={{marginVertical:25}}>
+            <MultipleSelectList
        placeholder="Resources"
        data={resourceItem}
        setSelected={(label)=> setSelected(label)}
@@ -396,13 +402,14 @@ console.log([year, month, day].join('-'))
         })
       } 
        }
-       dropdownItemStyles={{backgroundColor:"white",color:"black"}}
-       search={false}
+       dropdownItemStyles={{backgroundColor:"white",fontSize:16,borderColor:"white",borderWidth:0}}
        label="selected Resources"
        inputStyles={{color:"black"}}
-       dropdownTextStyles={{color:"red"}}
-       dropdownStyles={[{backgroundColor:"white",marginHorizontal:10,}]}
-       boxStyles={[{paddingHorizontal:15,backgroundColor:"white",padding:10,marginHorizontal:5},]} 
+       search={false}
+       closeicon={<AntDesign name="AntDesign"size={22} color="black" ></AntDesign>}
+       dropdownTextStyles={{color:"black",fontSize:16,fontWeight:"normal"}}
+       dropdownStyles={[{backgroundColor:"white",marginHorizontal:10,borderColor:"white",fontSize:16}]}
+       boxStyles={[{paddingHorizontal:15,backgroundColor:"white",paddingVertical:15,marginHorizontal:5,borderColor:"white",borderWidth:0}]} 
         />
         <TextInput
           placeholder="Order Number*"
@@ -416,6 +423,8 @@ console.log([year, month, day].join('-'))
               <Text style={style.errorText}>{formData.OrderError}</Text>
             )}
   </View>
+  <View >
+            </View>
   <View >
         <TouchableOpacity style={[style.btnStyle,{marginTop:25}]} onPress={showStartDatePicker}>
           <Text style={{color: COLORS.black}}>{displayDate.startDate}</Text>
@@ -496,7 +505,7 @@ console.log([year, month, day].join('-'))
         <TouchableOpacity
               style={style.btnStyles}
               onPress={() => {
-                onSubmit();
+              onSubmit();
               }}
               >
               <Text style={style.submitBtnTextStyle}>Submit</Text>

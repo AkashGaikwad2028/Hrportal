@@ -7,8 +7,8 @@ const client = axios.create({
     // baseURL:'http://newresourcing.nimapinfotech.com/api',
     baseURL: BASE_URL,
     headers: {
-        'Content-Type':'application/json',
-        Accept: 'application/json',
+        'Content-Type':"application/json",
+        Accept:'application/json',
     },
     timeout: 10000,
 });
@@ -74,4 +74,7 @@ const request = async options => {
     }
 };
 
+
+
 export default request;
+

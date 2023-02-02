@@ -15,6 +15,7 @@ function PurchaseOrderList({ data,editPurchaseOrder,navigation, deletePurchaseOr
   const [PdfData,setPdfData]=useState('')
   // console.log('modalVisible',modalVisible)
   const [disabel,setDisabel]=useState(false)
+  const [name,setName]=useState()
 
 const closeModal=()=>{
     console.log(modalVisible,"modalVisible")
@@ -27,16 +28,13 @@ const closeModal=()=>{
   };
 
   
-
   const _renderItem = ({ item }) => {
 
-    // console.log(item)
-    // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
       <>
      <SafeAreaView style={[GLOBALSTYLE.mainContainer]}>
       <Modal
-animationType="slide"
+animationType="fade"
 transparent={true} 
 visible={modalVisible}
 onRequestClose={() => {
@@ -50,6 +48,7 @@ navigation={navigation}
 />
 </Modal> 
 </SafeAreaView> 
+<SafeAreaView style={[GLOBALSTYLE.mainContainer]}>
 <Modal
         animationType="fade"
         transparent={true}
@@ -73,22 +72,21 @@ navigation={navigation}
         </View>
         </View>
       </Modal>
-
+      </SafeAreaView> 
       <View style={[GLOBALSTYLE.cardView,{opacity:modalVisible ? 0.6:1}]}>
-          <View style={(item.resources[0].fname.length + item.resources[0].lname.length)>12 ? GLOBALSTYLE.columnView :GLOBALSTYLE.rowView }>
+          <View style={[ GLOBALSTYLE.rowView ]}>
         {item.clients.client_name && ( 
             <View style={ GLOBALSTYLE.columnView}>
               <Text style={GLOBALSTYLE.label}>Client Name</Text>
               <Text style={GLOBALSTYLE.text}>{item.clients.client_name}</Text>
             </View>
            )} 
-
-           {item.resources[0].fname && item.resources[0].lname && (
+            {item.resources[0]!==undefined && item.resources[0].fname && item.resources[0].lname && ( 
              <View style={GLOBALSTYLE.columnView}>
             <Text style={GLOBALSTYLE.label}>Resource Name</Text>
-            <Text style={GLOBALSTYLE.text}>{`${item.resources[0].fname} ${item.resources[0].lname +','}`}</Text>
+            <Text style={GLOBALSTYLE.text}>{item.resources[0].fname} {item.resources[0].lname}</Text>
           </View>
-         )} 
+          )} 
         </View>
         <View style={GLOBALSTYLE.rowView}>
         {item.order_number&& ( 
@@ -224,7 +222,7 @@ modal:{
     marginVertical:10
   },
   DeletBtn:{
-    backgroundColor:"#FF0000",
+    backgroundColor:"#ff4500",
     paddingHorizontal:30,
     paddingVertical:10,
     borderRadius:5,
@@ -245,5 +243,4 @@ modal:{
   }
 });
 
-// setPdfData(item.pdf_file);
 

@@ -24,7 +24,7 @@ const SmallButton = props => {
         style={{
           color: COLORS.white,
           fontWeight: '600',
-          fontSize: 14,
+          fontSize: 18,
         }}>
         {props.title}
       </Text>

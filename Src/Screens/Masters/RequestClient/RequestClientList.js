@@ -42,6 +42,7 @@ function RequestClientList({ data}) {
 //   };
 
   const _renderItem = ({ item }) => {
+    console.log("clientrequest item",item)
     // console.log("item-----------",'fname',item.clients.client_name,(item.resources[0].fname.length + item.resources[0].lname.length)>12)
     return (
         <>
@@ -59,55 +60,68 @@ onRequestClose={() => {
 </Modal> */}
 {/* </SafeAreaView> */}
       <View style={[GLOBALSTYLE.cardView]}>
-          <View style={GLOBALSTYLE.rowView }>
-        {/* {item.clients.client_name && (  */}
+          <View style={GLOBALSTYLE.columnView}>
+         {item.company_name && ( 
             <View style={ GLOBALSTYLE.columnView}>
-              <Text style={GLOBALSTYLE.label}>Client Name</Text>
-              <Text style={GLOBALSTYLE.text}>Akash</Text>
+              <Text style={GLOBALSTYLE.label}>Company Name</Text>
+              <Text style={GLOBALSTYLE.text}>{item.company_name }</Text>
             </View>
-           {/* )}  */}
+           )}  
 
-           {/* {item.resources[0].fname && item.resources[0].lname && ( */}
+           {item.finance_name && (
              <View style={GLOBALSTYLE.columnView}>
-            <Text style={GLOBALSTYLE.label}>Resource Name</Text>
-            <Text style={GLOBALSTYLE.text}></Text>
+            <Text style={GLOBALSTYLE.label}>Finance Name</Text>
+            <Text style={GLOBALSTYLE.text}>{item.finance_name}</Text>
           </View>
-         {/* )}  */}
+         )} 
         </View>
-        <View style={GLOBALSTYLE.rowView}>
-        {/* {item.order_number&& (  */}
+        <View style={GLOBALSTYLE.columnView}>
+         {item.finance_email&& (
             <View style={GLOBALSTYLE.columnView}>
-              <Text style={GLOBALSTYLE.label}>Order Number</Text>
-              <Text style={GLOBALSTYLE.text}></Text>
+              <Text style={GLOBALSTYLE.label}>Finance Email</Text>
+              <Text style={GLOBALSTYLE.text}>{item.finance_email}</Text>
             </View>
-           {/* )}  */}
-
-           {/* {item.pdf_file && ( <View style={GLOBALSTYLE.columnView}> */}
-            <Text style={GLOBALSTYLE.label}>Pdf File</Text>
-            {/* <Text  onPress={() => onPressPurchaseOrder(item.pdf_file.toString())}>View</Text> */}
+           )}  
+<View style={GLOBALSTYLE.rowView}>
+           {item.finance_contact_number && ( <View style={GLOBALSTYLE.columnView}>
+            <Text style={GLOBALSTYLE.label}>Finance Number</Text>
+            <Text style={GLOBALSTYLE.text}>{item.finance_contact_number}</Text>
          </View>
-          {/* )} */}
+           )} 
       
-        <View style={GLOBALSTYLE.rowView}>
-        {/* {item.start_date && (  */}
+       
+        {item.nationality && ( 
             <View style={GLOBALSTYLE.columnView}>
-              <Text style={GLOBALSTYLE.label}>Start Date</Text>
-              <Text style={GLOBALSTYLE.text}>kaksksk</Text>
+              <Text style={GLOBALSTYLE.label}>Nationality</Text>
+              <Text style={GLOBALSTYLE.text}>{item.nationality}</Text>
             </View>
-           {/* )}  */}
-
-           {/* {item.end_date &&  */}
+           )}  
+</View>
+<View style={GLOBALSTYLE.columnView}>
+           {item.pan && (
             <View style={GLOBALSTYLE.columnView}>
-            <Text style={GLOBALSTYLE.label}>End Date</Text>
-            <Text style={GLOBALSTYLE.text}>akakkakskk</Text>
+            <Text style={GLOBALSTYLE.label}>Tan</Text>
+            <Text style={GLOBALSTYLE.text}>{item.pan}</Text>
           </View>
-        {/* //   )} */}
+       )}
+          {item.pan &&(
+          <View style={GLOBALSTYLE.columnView}>
+            <Text style={GLOBALSTYLE.label}>Pan</Text>
+            <Text style={GLOBALSTYLE.text}>{item.tan}</Text>
+          </View>
+     )} 
+        {item.gst &&(
+          <View style={GLOBALSTYLE.columnView}>
+            <Text style={GLOBALSTYLE.label}>gst</Text>
+            <Text style={GLOBALSTYLE.text}>{item.gst}</Text>
+          </View>
+     )} 
         </View>
         <View style={styles.upperViewStyle}>
           <View style={[styles.innerViewStyle]}>
             <SmallButton
-              color={COLORS.lightBlue}
-              title={'Edit'}
+              color={COLORS.lightgreen}
+              title={'Accept'}
             //   onPressFunction={() => {
             //     editPurchaseOrder(item)
             //   }}
@@ -115,12 +129,13 @@ onRequestClose={() => {
           </View>
           <View style={[styles.innerViewStyle]}>
             <SmallButton color={COLORS.red}
-              title={'Delete'}
+              title={'Reject'}
             //   onPressFunction={() => {
             //   deletePurchaseOrder(item.id)
             // }}
             />
           </View>
+        </View>
         </View>
         </View>
         </>

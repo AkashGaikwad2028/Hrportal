@@ -20,6 +20,7 @@ import {
 } from '../ActionConstant';
 import request from '../../Util/request';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import requestformData from '../../Util/requestFormData';
 
 export function getPurchaseOrder(error) {
@@ -73,32 +74,28 @@ export function getClients() {
 
 export function addPurchaseOrder(values, navigation) {
   console.log('addPurchaseOrder : ', values);
-  const newData =new FormData();
-  newData.append('resource_id', '341');
-  newData.append('client_id', '2');
-  newData.append('order_number','968963');
-  newData.append('start_date', '2022-14-02');
-  newData.append('end_date', '2022-19-02');
-  newData.append('title', 'Slang');
-  newData.append('description', 'A Unseen Gamer');
-  newData.append('pdf_file','http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf');
-  // var data = new FormData();
-  // data.append('resource_id', '162');
-  // data.append('client_id', '2');
-  // data.append('order_number', 98676988);
-  // data.append('start_date', '2022-14-02');
-  // data.append('end_date', '2022-19-02');
-  // data.append('title', 'Slang');
-  // data.append('description', 'A Unseen Gamer');
-  // data.append('pdf_file','http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf');
-  // console.log('newData at action', newData);
+  let ReFormdata =new FormData();
+  ReFormdata.append('resource_id', '341');
+  ReFormdata.append('client_id', '2');
+  ReFormdata.append('order_number','986769');
+  ReFormdata.append('start_date', '2022-14-02');
+  ReFormdata.append('end_date', '2022-19-02');
+  ReFormdata.append('title', 'Slang');
+  ReFormdata.append('description', 'A Unseen Gamer');
+  ReFormdata.append('pdf_file',  {uri: values.pdf_file.file.uri, name: values.pdf_file.file.name, type: values.pdf_file.file.type})
+ 
+  console.log('newData at action', ReFormdata);
   return async dispatch => {
-    dispatch(purchaseOrderDispatch({}, ADDPURCHASEORDER_PROGRESS));
+    // dispatch(purchaseOrderDispatch({}, ADDPURCHASEORDER_PROGRESS));
     try {
-      const {data} = await requestformData({
-        url: '/purchase',
+      const data = await requestformData({
+        url: 'http://144.91.79.237:8905/api/purchase',
         method:'POST',
-        data:{newData},
+        data:ReFormdata,
+        headers: {
+          "Content-Type":"multipart/form-data;  boundary=----myboundary",
+          "Accept":'application/json,',
+        }
       });
       console.log('addPurchaseOrder response', data);
       if (data.message) {
@@ -123,6 +120,8 @@ export function deletePurchaseOrders(values) {
       const data = await request({
         url: `/purchase/${values}`,
         method: 'DELETE',
+      
+        // Accept: 'application/json',
       });
       console.log('DELETEPURCAHSEORDER=>>>>>>>>>>>', data.data.message);
       if (data.data.message) {
@@ -142,22 +141,22 @@ export function updatePurchaseOrder(formData, id, navigation) {
   console.log("id for purchase daat",id)
   console.log("purcahseedit",formData)
 
-  const ReFormdata =new FormData();
-  ReFormdata.append('resource_id', '341');
-  ReFormdata.append('client_id', '2');
-  ReFormdata.append('order_number','986769');
-  ReFormdata.append('start_date', '2022-14-02');
-  ReFormdata.append('end_date', '2022-19-02');
-  ReFormdata.append('title', 'Slang');
-  ReFormdata.append('description', 'A Unseen Gamer');
-  ReFormdata.append('pdf_file','http://144.91.79.237:8905/uploads/docs/purchase/1669368232302_NMP794518.pdf')
+  // const ReFormdata =new FormData();
+  // ReFormdata.append('resource_id', '341');
+  // ReFormdata.append('client_id', '2');
+  // ReFormdata.append('order_number','986769');
+  // ReFormdata.append('start_date', '2022-14-02');
+  // ReFormdata.append('end_date', '2022-19-02');
+  // ReFormdata.append('title', 'Slang');
+  // ReFormdata.append('description', 'A Unseen Gamer');
+  // ReFormdata.append('pdf_file','')
   return async dispatch => {
       dispatch(purchaseOrderDispatch({}, EDITURCHASEORDER_PROGRESS))
       console.log("Form data", formData)
       try {
           const data = await requestformData({
               url: `/purchase/${id}`,
-              method: 'PUT',
+              method:'PUT',
               data: ReFormdata,
           });
           console.log('updateEDITURCHASEORDER response', data.data);

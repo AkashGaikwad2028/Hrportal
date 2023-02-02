@@ -9,6 +9,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { getRequetsClient } from "../../../Redux/Actions/RequestCllientAction";
 import RequestClientList from "./RequestClientList"
+import SearchBox from "../../../Components/SearchBox";
 
 const RequestClient = ({ navigation }) => {
     const [requestClient, setrequestClient] = useState()
@@ -16,9 +17,15 @@ const RequestClient = ({ navigation }) => {
     // const navigation=useNavigation()
 
 
-    const reducerData = useSelector(state => state.RequestClientReducer)
+    const reducerData = useSelector(state => state.RequestClientReducer.RequestClientReducerData)
+    console.log("rediucedfjd=>>>>>>>>>>>>>",reducerData)
 
-    console.log("reducer+>>>>>>>>>>>>>>>>>>>",reducerData)
+    // console.log("reducer+>>>>>>>>>>>>>>>>>>>",reducerData.data.client_request)
+
+    // if(reducerData){
+    //     console.log("idreddjdj",reducerData.client_request[0]
+    //     )
+    // }
 
     useEffect(() => {
         const unSubscribe = navigation.addListener('focus', () => {
@@ -26,10 +33,28 @@ const RequestClient = ({ navigation }) => {
         });
         return unSubscribe;
       }, [navigation]);
+
+console.log("requestclient",requestClient)
+
+// const clientRequest=(reducerData)=>{
+//     console.log("first",reducerData)
+// for(let i=0;i<=reducerData.length;i++)
+// }
+
+// clientRequest(reducerData)
+
+      useEffect(()=>{
+            setrequestClient(reducerData.client_request)
+      },[reducerData.client_request])
+
+      console.log("requestclient",requestClient)
     
     return (
         <View style={styles.container}>
-            <RequestClientList data={"Akash"} />
+             <SearchBox
+        // setSearchValue={setSearchValue}
+      />
+            <RequestClientList data={requestClient} />
         </View>
     );
 };
