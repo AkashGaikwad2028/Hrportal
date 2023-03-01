@@ -14,10 +14,13 @@ import { getProjectTarget, deleteProjectTarget, getResources } from "../../../Re
 import { useSelector, useDispatch } from "react-redux";
 import SmallButton from "../../../Components/SmallButton";
 import { COLORS } from "../../../Constants/Theme";
+import { ActivityIndicator } from "react-native";
 
 const ProjectTarget = ({ navigation }) => {
     const dispatch = useDispatch();
     const reducerData = useSelector(state => state.ProjectTargetReducer)
+    const [loading,setLoading]=useState(true)
+    // console.log("reducerdata",reducerData)
 
     const [resources, setResources] = useState([]);
     const [filterResource, setFilterResources] = useState([]);
@@ -26,6 +29,7 @@ const ProjectTarget = ({ navigation }) => {
 
     useEffect(() => {
         const unSubscribe = navigation.addListener('focus', () => {
+           setLoading(true)
             dispatch(getProjectTarget())
             dispatch(getResources())
         });
@@ -37,22 +41,26 @@ const ProjectTarget = ({ navigation }) => {
     }, [search])
 
     useEffect(() => {
-        // console.log("-------------------", reducerData.resourceData)
         setResources(reducerData.resourceData)
         setFilterResources(reducerData.resourceData)
+        setLoading(false)
     }, [reducerData.resourceData])
 
+    
     const setSearchValue = value => {
         setSearch(value);
     };
     const getAccountFilterData = () => {
         const filterValue = resources?.filter(data => {
+// console.log("secodary skill",data.primary_skill)
+
             if (search.length === 0) {
                 return data;
             } else if (
                 data.fname.toLowerCase().includes(search.toLowerCase()) ||
                 data.lname.toLowerCase().includes(search.toLowerCase()) ||
-                data.resident_address.includes(search.toLowerCase())
+                data.resident_address.includes(search.toLowerCase())||
+                data.primary_skill.includes(search.toLowerCase())
             ) {
                 console.log(data);
                 return data;
@@ -95,6 +103,19 @@ const ProjectTarget = ({ navigation }) => {
             <SearchBox
                 setSearchValue={setSearchValue}
             />
+
+
+           {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.blue} />
+        </View>
+      )}
+       { !loading && search && (
+        <View style={styles.loadingContainer}>
+          <Text> Project Target Information is Not Found </Text>
+        </View> 
+     )} 
+
             <View>
                 <FlatList
                     data={filterResource}
@@ -164,7 +185,11 @@ const ProjectTarget = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
+ loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
 export default ProjectTarget

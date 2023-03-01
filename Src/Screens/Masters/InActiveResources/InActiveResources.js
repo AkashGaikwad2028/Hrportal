@@ -6,8 +6,8 @@ import {
     Text,
     TouchableOpacity,
     FlatList,
-    Linking,
-    Alert
+    Alert,
+    Modal
 } from "react-native";
 import { GLOBALSTYLE } from "../../../Constants/Styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,20 +15,26 @@ import SearchBox from "../../../Components/SearchBox";
 import { getInActiveresources, ActiveResource, deleteInActiveUser } from "../../../Redux/Actions/InActiveResourceAction";
 import { COLORS } from "../../../Constants/Theme";
 import SmallButton from "../../../Components/SmallButton";
+import { ActivityIndicator } from "react-native";
+import ViewPdf from "../../../Components/ViewPdf";
+
 
 const InActiveResources = ({ navigation }) => {
-
     const dispatch = useDispatch();
     const reducerData = useSelector(state => state.InActiveResourceReducer)
+   
     const [resources, setResources] = useState([]);
     const [filterResource, setFilterResources] = useState([]);
     const [search, setSearch] = useState('');
-
+    const [loading,setLoading]=useState(true)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [PdfData,setPdfData]=useState('')
+    console.log("resssssssssssssssssssssss",PdfData)
 
     useEffect(() => {
         const unSubscribe = navigation.addListener('focus', () => {
+            setLoading(true)
             dispatch(getInActiveresources())
-
         });
         return unSubscribe;
     }, [navigation]);
@@ -39,11 +45,12 @@ const InActiveResources = ({ navigation }) => {
     useEffect(() => {
         getAccountFilterData();
     }, [search])
-
+    console.log("filterResource=>>>>>>>>>>>>",filterResource)
     useEffect(() => {
         // console.log("-------------------", reducerData.InActiveResourceData)
         setResources(reducerData.InActiveResourceData)
         setFilterResources(reducerData.InActiveResourceData)
+        setLoading(false)
     }, [reducerData.InActiveResourceData])
 
     const getAccountFilterData = () => {
@@ -98,11 +105,53 @@ const InActiveResources = ({ navigation }) => {
 
     }
 
+    // const closeModal=()=>{
+    //     console.log("useCallback modal")
+    //     setDeletmodalVisible(false)
+    //   }
+    
+      const closeModalHandler = () => {
+        setModalVisible(!modalVisible);
+        // console.log('----MODAL CLOSED!----');
+      };
+    
+      
+
     return (
+      
+       <>
+       <SafeAreaView>
+       <Modal
+animationType="fade"
+transparent={true} 
+visible={modalVisible}
+onRequestClose={() => {
+  Alert.alert("Modal has been closed.");
+  setModalVisible(!modalVisible);}}
+>
+<ViewPdf
+pdfdata={PdfData} 
+onCancel={closeModalHandler}
+navigation={navigation}
+/>
+</Modal> 
+</SafeAreaView>  
+
         <SafeAreaView style={GLOBALSTYLE.safeAreaViewStyle}>
             <SearchBox
                 setSearchValue={setSearchValue}
             />
+
+{loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.blue} />
+        </View>
+      )}
+       { !loading && search && (
+        <View style={styles.loadingContainer}>
+          <Text> InActive Resources Information is Not Found </Text>
+        </View> 
+     )} 
             <View>
                 <FlatList
                     data={filterResource}
@@ -178,10 +227,10 @@ const InActiveResources = ({ navigation }) => {
                                     <Text style={GLOBALSTYLE.label}>CV</Text>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            Linking.openURL(
-                                                item.resume === null ? '-' : item.resume,
-                                            );
-                                        }}
+                                            setModalVisible(true);
+                                            setPdfData(item.resume);
+                                            
+                                          }}
                                     >
                                         <Text style={[GLOBALSTYLE.text, { color: COLORS.lightBlue }]}>View</Text>
                                     </TouchableOpacity>
@@ -223,11 +272,16 @@ const InActiveResources = ({ navigation }) => {
                 />
             </View>
         </SafeAreaView>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
-
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 })
 
 export default InActiveResources

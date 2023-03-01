@@ -1,23 +1,12 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet, Dimensions,Linking,FlatList,TouchableOpacity,Alert} from 'react-native';
-import SmallButton from '../../../Components/SmallButton';
-import { COLORS } from '../../../Constants/Theme';
-import { GLOBALSTYLE } from '../../../Constants/Styles';
-// import Pdf from 'react-native-pdf';
-// import {SafeAreaView} from 'react-native-safe-area-context';
+import SmallButton from './SmallButton';
+import { COLORS } from '../Constants/Theme';
+import { GLOBALSTYLE } from '../Constants/Styles';
+
 
 const ViewPdf = ({pdfdata,onCancel,navigation}) => {
-// const [pdfs,setPdfs]=useState('')
-//     console.log("pdfData-----------",pdfdata)
-//     if(pdfdata!==undefined){
-//         setPdfs(pdfdata)
-//     }
 
-    // console.log("pdfssss-----------------",pdfs)
-  // const source = {
-  //   uri:[pdfdata],
-  //   cache: true,
-  // };
 
   const onPressPurchaseOrder = url => {
     if (url === null || url === undefined) {

@@ -9,6 +9,7 @@ export const COLORS = {
   tomatto: '#FFA86C',
   lightgreen: '#8BC535',
   green: '#58A158',
+  yellow:"#ffcc00"
 
 };
 

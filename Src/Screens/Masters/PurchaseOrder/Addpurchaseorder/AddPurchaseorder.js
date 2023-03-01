@@ -117,68 +117,92 @@ export default function AddPurchaseorder({navigation}) {
       return
     }
 
-    dispatcher({type: 'resumeError', payload:null});
+      dispatcher({type: 'resumeError', payload:null});
       dispatcher({type: 'resumeError', payload:null});
       dispatcher({type: 'resourceError', payload:null});
       dispatcher({type: 'startDateError', payload:null});
       dispatcher({type: 'EndDateError', payload:null});
       dispatcher({type: 'clientError', payload:null});
       dispatcher({type: 'OrderError', payload:null});
-      fun(formData)
+      // fun(formData)
     //  ( formData.client.id)
      console.log("formData",formData.resume)
-    //  let data= convertData(formData)
+     let data= convertData(formData)
       // dispatch(addPurchaseOrder(data,navigation))
   }
+
+  let result;
   
 
-//   const convertData=formData=>{
-//     const newData=new FormData()
-//      newData.append('resource_id', [formData.resource.id]);
-//      newData.append('client_id', formData.client.id)
-//      newData.append('order_number',formData.Order.order_number);
-//      newData.append( "start_date",formData.startDate,);
-//      newData.append( "end_date",formData.EndDate);
-//      newData.append('title', 'Slang');
-//      newData.append('description', 'A Unseen Gamer');
-//      newData.append( "pdf_file",formData.resume);
-// return newData
-//   }
-   let fun=(formData)=> {
-    console.log("function inside",formData,formData.resume.file.uri)
-    console.log("function called")
+  const convertData=formData=>{
+    result=formData.Order.order_number
+    console.log("typeof",typeof(result))
     const newData=new FormData()
      newData.append('resource_id', [formData.resource.id]);
      newData.append('client_id', formData.client.id)
-     newData.append('order_number',formData.Order.order_number);
+     newData.append('order_number',Number(result));
      newData.append( "start_date",formData.startDate,);
      newData.append( "end_date",formData.EndDate);
-     newData.append('title', 'Slang');
-     newData.append('description', 'A Unseen Gamer');
-     newData.append( "pdf_file", {uri: formData.resume.file.uri, name: formData.resume.file.name, type: formData.resume.file.type});
-    ;
-  var config = {
-    method:'post',
-    url: 'http://144.91.79.237:8905/api/purchase',
-    maxBodyLength: Infinity,
-    headers: {
-      Authorization:' Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUzLCJlbWFpbCI6InRlc3RAbmltYXBpbmZvdGVjaC5jb20iLCJpYXQiOjE2NzUzMDc2MTYsImV4cCI6MTY3NTM5NDAxNn0.kby0SExmfPuH5VUTu1G15swGu8ulU4ck28hDjV0KDZI',
-        'Content-Type': 'multipart/form-data;application/pdf',
-        Accept:'application/JSON'
-    },
-    data:newData,
-  };
-  console.log("newData",newData)
+    //  newData.append('title', 'Slang');
+    //  newData.append('description', 'A Unseen Gamer');
+     newData.append( "pdf_file",formData.resume.file.uri);
+return newData
+  }
+//    let fun=(formData)=> {
+//     console.log("function inside",formData,formData.resume.file.uri)
+//     console.log("function called")
+//     // const newData=new FormData()
+//     //  newData.append('resource_id', [formData.resource.id]);
+//     //  newData.append('client_id', formData.client.id)
+//     //  newData.append('order_number',(JSON.stringify(formData.Order.order_number)));
+//     //  newData.append( "start_date",formData.startDate,);
+//     //  newData.append( "end_date",formData.EndDate);
+//     //  newData.append('title', 'Slang');
+//     //  newData.append('description', 'A Unseen Gamer');
+//     //  newData.append( "pdf_file", {uri: formData.resume.file.uri, name: formData.resume.file.name, type: formData.resume.file.type});
+//     ;
 
-  axios(config)
-    .then(function (response) {
-      return response.json();
-      // console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error.message,error.response);
-    });
-};
+    
+// const Data=new FormData()
+// // Data.append('newData', {
+// //   "string": JSON.stringify(newData), //This is how it works :)
+// //   type: 'application/json'
+// // });
+// Data.append("pdf_file",{uri: formData.resume.file.uri, name: formData.resume.file.name, type: formData.resume.file.type})
+
+// const newData={
+//   "response_id":318,
+//   "client_id":255,
+//    "order_number":"6545",
+//    "start_date":"2022-14-02",
+//    "end_date":"2022-14-02",
+//    'title':'Slang',
+//    'description': 'A Unseen Gamer'
+// }
+
+// console.log("DAaaaaaaaaaaaaa",Data)
+
+//   var config = {
+//     method:'post',
+//     url: 'http://144.91.79.237:8905/api/purchase',
+//     maxBodyLength: Infinity,
+//     headers: {
+//      Authorization:' Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUzLCJlbWFpbCI6InRlc3RAbmltYXBpbmZvdGVjaC5jb20iLCJpYXQiOjE2NzU0ODk4MzUsImV4cCI6MTY3NTU3NjIzNX0.ilzoUho5yyyOyrgjop4w81Ai3IfxGo6TXhqsoZmPfl8',
+//         'Content-Type': 'multipart/form-data',
+//     },
+//     body:{Data,newData},
+//   };
+//   console.log("newData",newData)
+
+//   axios(config)
+//     .then(function (response) {
+//       return response.json();
+//       // console.log(JSON.stringify(response.data));
+//     })
+//     .catch(function (error) {
+//       console.log(error.message,error.response);
+//     });
+// };
 
 
 
@@ -414,7 +438,7 @@ console.log([year, month, day].join('-'))
         <TextInput
           placeholder="Order Number*"
            value={formData.Order}
-           style={[GLOBALSTYLE.TextInputStyle, {marginTop: 25}]}
+           style={[GLOBALSTYLE.TextInputStyle, {marginTop: 0}]}
            onChangeText={data => dispatcher({type:'Order', payload:{"order_number":data}})}
           keyboardType="default"
           maxLength={12}   
@@ -521,7 +545,7 @@ const style = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 10,
     marginHorizontal:10,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     borderColor: '#fff',
     zIndex:100
   },

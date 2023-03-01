@@ -6,8 +6,8 @@ import Home from '../Screens/DashBoard/Home';
 import CompareReport from '../Screens/CompareReport/CompareReport';
 import InvoiceStatus from '../Screens/Invoice/InvoiceStatus/InvoiceStatus';
 import InvoiceHistory from '../Screens/Invoice/InvoiceHistory/InvoiceHistory';
-import ExternalProjectInvoiceHistory from '../Screens/Invoice/ExternalProjectInvoiceHistory/ExternalProjectInvoiceHistory';
-import ExternalProjectInvoiceStatus from '../Screens/Invoice/ExternalProjectInvoiceStatus/ExternalProjectInvoiceStatus';
+import ExternalProjectInvoiceHistory from '../Screens/Invoice/ExternalProjectInvoicHistory/ExternalProjectInvoiceHistory';
+import ExternalProjectInvoiceStatus from '../Screens/Invoice/ExternalProjectInvoiceHistory/ExternalProjectInvoiceStatus';
 import InterViewReport from '../Screens/Reports/InterViewReport';
 import InterView from '../Screens/Process/InterView/InterView';
 import Joining from '../Screens/Process/Joining/Joining';
@@ -31,6 +31,7 @@ import Reason from '../Screens/Masters/Reason/Reason';
 import PurchaseOrder from "../Screens/Masters/PurchaseOrder/PurchaseOrder"
 import AddPurchaseorder from '../Screens/Masters/PurchaseOrder/Addpurchaseorder/AddPurchaseorder';
 import { GLOBALSTYLE } from '../Constants/Styles';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -69,13 +70,13 @@ const DrawerNavigation = ({ navigation }) => {
         options={{ headerShown: true, headerTitleAlign: 'center' }}
       />
       <Drawer.Screen
-        name="External Project Invoice History"
-        component={ExternalProjectInvoiceHistory}
+        name="External Project Invoice Status"
+         component={ExternalProjectInvoiceStatus}
         options={{ headerShown: true, headerTitleAlign: 'center' }}
       />
       <Drawer.Screen
-        name="External Project Invoice Status"
-        component={ExternalProjectInvoiceStatus}
+        name="External Project Invoice History"
+        component={ExternalProjectInvoiceHistory}
         options={{ headerShown: true, headerTitleAlign: 'center' }}
       />
       <Drawer.Screen

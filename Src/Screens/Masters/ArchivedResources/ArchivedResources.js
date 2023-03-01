@@ -15,12 +15,13 @@ import { getArchivedResources, ArchiveUser } from "../../../Redux/Actions/Archiv
 import { useSelector, useDispatch } from "react-redux";
 import { COLORS } from "../../../Constants/Theme";
 import { getResources } from "../../../Redux/Actions/ProjectTargetAction";
+import { ActivityIndicator } from "react-native";
 
 
 const ArchivedResources = ({ navigation }) => {
     const dispatch = useDispatch();
     const reducerData = useSelector(state => state.ArchiveResourceReducer)
-
+    const [loading,setLoading]=useState(true)
     const [resources, setResources] = useState([]);
     const [filterResource, setFilterResources] = useState([]);
     const [search, setSearch] = useState('');
@@ -31,8 +32,8 @@ const ArchivedResources = ({ navigation }) => {
 
     useEffect(() => {
         const unSubscribe = navigation.addListener('focus', () => {
+            setLoading(true)
             dispatch(getArchivedResources())
-
         });
         return unSubscribe;
     }, [navigation]);
@@ -45,6 +46,7 @@ const ArchivedResources = ({ navigation }) => {
         // console.log("-------------------", reducerData.archiveResourceData)
         setResources(reducerData.archiveResourceData)
         setFilterResources(reducerData.archiveResourceData)
+        setLoading(false)
     }, [reducerData.archiveResourceData])
 
 
@@ -78,7 +80,16 @@ const ArchivedResources = ({ navigation }) => {
             <SearchBox
                 setSearchValue={setSearchValue}
             />
-
+             {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.blue} />
+        </View>
+      )}
+  { !loading && search && (
+        <View style={styles.loadingContainer}>
+          <Text> Archived Resources Information is Not Found </Text>
+        </View> 
+     )} 
             <View>
                 <FlatList
                     data={filterResource}
@@ -199,7 +210,11 @@ const ArchivedResources = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 })
 
 export default ArchivedResources;

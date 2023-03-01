@@ -55,19 +55,6 @@ const PurchaseOrder = ({ navigation }) => {
     }
   }, [reducerData.purchaseorderData])
 
-  // useEffect(()=>{
-  //   if(filterPurchaseData == undefined){
-  //     setLoading(false)
-  //     setError(true)
-  //   }
-  //   else{
-  //     setError(false)
-  //   }
-  // },[reducerData.getPurchaseOrder])
-   
-
-  // console.log("errorssssssss=>>>>>>>",error)
-
 
   useEffect(() => {
     getPurchaseOrderFilterData();
@@ -80,8 +67,6 @@ const PurchaseOrder = ({ navigation }) => {
     });
     return unsubscribe;
   }, [navigation, dispatch]);
-
-  // console.log("error",error)
 
   console.log("loading", loading)
 

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View, Text, StyleSheet,Dimensions,Alert,Linking,Modal,TouchableOpacity} from 'react-native';
 import {GLOBALSTYLE} from "../../../Constants/Styles"
 import { COLORS } from '../../../Constants/Theme';
 import SmallButton from "../../../Components/SmallButton"
-import ViewPdf from './ViewPdf';
+import ViewPdf from "../../../Components/ViewPdf";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DeleteModal from '../../../Components/DeleteModal';
 
 
 
@@ -13,14 +14,13 @@ function PurchaseOrderList({ data,editPurchaseOrder,navigation, deletePurchaseOr
   const [modalVisible, setModalVisible] = useState(false);
   const [DeletmodalVisible, setDeletmodalVisible] = useState(false);
   const [PdfData,setPdfData]=useState('')
-  // console.log('modalVisible',modalVisible)
-  const [disabel,setDisabel]=useState(false)
-  const [name,setName]=useState()
+ 
 
-const closeModal=()=>{
-    console.log(modalVisible,"modalVisible")
+  const closeModal=()=>{
+    console.log("useCallback modal")
     setDeletmodalVisible(false)
   }
+
   console.log('deletemodalVisible',DeletmodalVisible)
   const closeModalHandler = () => {
     setModalVisible(!modalVisible);
@@ -29,6 +29,13 @@ const closeModal=()=>{
 
   
   const _renderItem = ({ item }) => {
+
+    const DeletePurchaseOrder=()=>{
+      console.log("DeleteClientCalled")
+      deletePurchaseOrder(item.id),
+      setDeletmodalVisible(!DeletmodalVisible)
+    }
+
 
     return (
       <>
@@ -48,31 +55,12 @@ navigation={navigation}
 />
 </Modal> 
 </SafeAreaView> 
-<SafeAreaView style={[GLOBALSTYLE.mainContainer]}>
-<Modal
-        animationType="fade"
-        transparent={true}
-        visible={DeletmodalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setDeletmodalVisible(!DeletmodalVisible);
-        }}>
-          <View style={styles.modalContainer}>
-        <View  style={styles.modal}>
-          <View>
-           <Text style={{textAlign:"center",fontSize:25,color:"black",marginTop:10}}>YOU ARE SURE</Text>
-          </View>
-          <View>
-            <Text style={{textAlign:"center",fontSize:18,marginTop:10}}>are you sure you want to delete ?</Text>
-          </View>
-          <View style={[styles.buttonContainer,{marginTop:10}]}>
-            <TouchableOpacity onPress={()=>{ deletePurchaseOrder(item.id),setDeletmodalVisible(!DeletmodalVisible)}} style={styles.DeletBtn}><Text style={{ color: COLORS.white,fontSize:18}}>Delete</Text></TouchableOpacity>
-            <TouchableOpacity onPress={closeModal} style={styles.cancelBtn}><Text style={{ color: COLORS.white,fontSize:18}}>cancel</Text></TouchableOpacity>
-          </View>
-        </View>
-        </View>
-      </Modal>
-      </SafeAreaView> 
+
+    <DeleteModal
+        closeModal={closeModal}
+        onpress={DeletePurchaseOrder}
+        visibel={DeletmodalVisible}
+        />
       <View style={[GLOBALSTYLE.cardView,{opacity:modalVisible ? 0.6:1}]}>
           <View style={[ GLOBALSTYLE.rowView ]}>
         {item.clients.client_name && ( 

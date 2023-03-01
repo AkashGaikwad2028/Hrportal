@@ -51,14 +51,15 @@ export function updateProjectTarget(resource, date, id, navigation) {
         method: 'PUT',
         data: formData,
       });
-     // console.log('updateProjectTarget response', data.data);
+    //  console.log('updateProjectTarget response', data.data);
       if (data.message) {
+        console.log("datamesssage",data.message)
         dispatch(projectTargetDispatch(data, EDITPROJECTTARGET_SUCCESS));
-        Toast.show('Project Target Updated Successfully');
       }
+      Toast.show('Project Target Not Updated Successfully');
       navigation.goBack();
     } catch (err) {
-      console.log('updateProjectTarget error', err);
+      // console.log('updateProjectTarget error', err);
       dispatch(projectTargetDispatch(err, EDITPROJECTTARGET_FAIL));
       Toast.show('Project Target Not Updated Successfully');
     }
@@ -115,8 +116,8 @@ export function deleteProjectTarget(values) {
      // console.log('deleteProjectTarget response', data.data);
       if (data.data.message) {
         dispatch(projectTargetDispatch(data, DELETEPROJECT_SUCCESS));
-        Toast.show('Project Target deleted Successfully');
       }
+      Toast.show('Project Target deleted Successfully');
     } catch (err) {
       console.log('deleteProjectTarget error', err);
       dispatch(projectTargetDispatch(err, DELETEPROJECT_FAIL));

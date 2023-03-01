@@ -89,7 +89,7 @@ const CustomDrawer = props => {
                                 <CustomDrawerItem
                                     navigation={props.navigation}
                                     title="External Project Invoice History"
-                                    route={'External Invoice History'}
+                                    route={'External Project Invoice History'}
                                 />
                             </View>
                         </View>
@@ -255,3 +255,5 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
 });
+
+

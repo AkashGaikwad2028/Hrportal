@@ -14,6 +14,9 @@ import AccountReducer from './AccountReducer';
 import ReasonReducer from './ReasonReducer';
 import PurchaseOrderReducer from './PurchaseOrderReducer';
 import RequestClientReducer from './RequestClientReducer';
+import InvoiceStatusReducer from './InvoiceStatusReducer';
+import InvoiceHistoryReducer from './InvoiceHistoryReducer';
+import Externalinvicehistoryreducer from './Externalinvicehistoryreducer';
 
 const rootReducer = combineReducers({
   loginReducer: loginReducer,
@@ -30,6 +33,9 @@ const rootReducer = combineReducers({
   AccountReducer: AccountReducer,
   ReasonReducer: ReasonReducer,
   PurchaseOrderReducer: PurchaseOrderReducer,
-RequestClientReducer:RequestClientReducer 
+RequestClientReducer:RequestClientReducer ,
+InvoiceStatusReducer:InvoiceStatusReducer,
+InvoiceHistoryReducer:InvoiceHistoryReducer,
+Externalinvicehistoryreducer:Externalinvicehistoryreducer
 });
 export default rootReducer;

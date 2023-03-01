@@ -74,24 +74,24 @@ export function getClients() {
 
 export function addPurchaseOrder(values, navigation) {
   console.log('addPurchaseOrder : ', values);
-  let ReFormdata =new FormData();
-  ReFormdata.append('resource_id', '341');
-  ReFormdata.append('client_id', '2');
-  ReFormdata.append('order_number','986769');
-  ReFormdata.append('start_date', '2022-14-02');
-  ReFormdata.append('end_date', '2022-19-02');
-  ReFormdata.append('title', 'Slang');
-  ReFormdata.append('description', 'A Unseen Gamer');
-  ReFormdata.append('pdf_file',  {uri: values.pdf_file.file.uri, name: values.pdf_file.file.name, type: values.pdf_file.file.type})
+  // let ReFormdata =new FormData();
+  // ReFormdata.append('resource_id', '341');
+  // ReFormdata.append('client_id', '2');
+  // ReFormdata.append('order_number','986769');
+  // ReFormdata.append('start_date', '2022-14-02');
+  // ReFormdata.append('end_date', '2022-19-02');
+  // ReFormdata.append('title', 'Slang');
+  // ReFormdata.append('description', 'A Unseen Gamer');
+  // ReFormdata.append('pdf_file',  {uri: values.pdf_file.file.uri, name: values.pdf_file.file.name, type: values.pdf_file.file.type})
  
-  console.log('newData at action', ReFormdata);
+  // console.log('newData at action', ReFormdata);
   return async dispatch => {
     // dispatch(purchaseOrderDispatch({}, ADDPURCHASEORDER_PROGRESS));
     try {
       const data = await requestformData({
         url: 'http://144.91.79.237:8905/api/purchase',
         method:'POST',
-        data:ReFormdata,
+        data:values,
         headers: {
           "Content-Type":"multipart/form-data;  boundary=----myboundary",
           "Accept":'application/json,',
@@ -154,10 +154,10 @@ export function updatePurchaseOrder(formData, id, navigation) {
       dispatch(purchaseOrderDispatch({}, EDITURCHASEORDER_PROGRESS))
       console.log("Form data", formData)
       try {
-          const data = await requestformData({
+          const data = await request({
               url: `/purchase/${id}`,
               method:'PUT',
-              data: ReFormdata,
+              data: formData,
           });
           console.log('updateEDITURCHASEORDER response', data.data);
           if (data.message) {
