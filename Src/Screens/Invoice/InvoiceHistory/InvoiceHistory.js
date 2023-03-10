@@ -4,50 +4,60 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
+    Modal,
     TouchableOpacity,Dimensions
 } from "react-native";
 import SearchBox from "../../../Components/SearchBox";
 import { COLORS } from "../../../Constants/Theme";
 import InvoiceHistoryCard from "./InvoiceHistoryCard";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import Export from "../Export";
 import dayjs from "dayjs";
 import DropDownPicker from "react-native-dropdown-picker";
 import { GLOBALSTYLE } from "../../../Constants/Styles";
-import {GetInvoiceHistoryData,GetInvoiceHistoryDataMonthlyData} from "../../../Redux/Actions/InvoiceHistoryAction"
+import {GetInvoiceHistoryDataMonthlyData,SendInvoiceHistoryData,GetInvoiceHistoryDataMonthlySearchData} from "../../../Redux/Actions/InvoiceHistoryAction"
 // import {} from "../../../Redux/Actions/InvoiceHistoryAction"
 import { ActivityIndicator } from "react-native";
 
 const InvoiceHistory = ({ navigation }) => {
-    // const [invoicehistorydata,setInvoiceHistorydata]=useState([])
     const [InovoiceInternalData,setInovoiceInternalData]=useState([])
     const[InternalinvoicehistoryMonthdata,setInternalinvoicehistoryMonthdata]=useState(null)
     const dispatch=useDispatch()
     const reducerdata=useSelector(state=>state.InvoiceHistoryReducer.getInvoiceHistorydata)
     const reducerdMonthdata=useSelector(state=>state.InvoiceHistoryReducer.getInternalInvoiceMonthdata)
-    console.log("reducerdatatainvoce xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=>>>>>>",reducerdata)
+    const reducerdMonthSearchdata=useSelector(state=>state.InvoiceHistoryReducer.SearchInvoicehistoryData)
+    const [modalVisible, setModalVisible] = useState(false)
+    console.log("reducerdatatainvoce xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=>>>>>>",reducerdMonthSearchdata)
     // console.log("reducerdatatainvoceFirst =>>>>>>",reducerdata)
     const [openYear,setOpenyear]=useState(false)
     const [getyearvalue,setGetYearvalue]=useState()
     const [getyearitem,setgetyearitem]=useState([])
     const [openMonth,setopenMonth]=useState(false)
-    const [getMonthvalue,setGetMonthvalue]=useState()
+    const [getMonthvalue,setGetMonthvalue]=useState([])
     const [getMonthitem,setgetMonthitem]=useState([])
     const [search, setSearch] = useState('');
     const [FilterInvoiceData, setFilterInvoiceData] = useState([]);
     const [loading, setLoading] = useState(true);
+    // const [MergedData,setMergedData]=useState([])
 
 
+    console.log("mergedata",getMonthvalue,"getmonth===========",getyearvalue)
 
 
 
     useEffect(() => {
       const unSubscribe = navigation.addListener('focus', () => {
         setLoading(true)
-          dispatch(GetInvoiceHistoryData())
+        let month ="march"
+        let year="2023"
+        if(month!==undefined || year !== undefined){
+          dispatch(GetInvoiceHistoryDataMonthlyData(month,year))
+        }    
       });
       return unSubscribe;
-    }, [navigation,dispatch]);
+    }, [navigation]);
 
 
 
@@ -62,7 +72,7 @@ const InvoiceHistory = ({ navigation }) => {
        setgetyearitem(year)
     }
 
-    // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmm",InternalinvoicehistoryMonthdata)
+    console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmm",InternalinvoicehistoryMonthdata)
 
     const Getmonth=()=>{
       let Month=[]
@@ -95,91 +105,120 @@ const InvoiceHistory = ({ navigation }) => {
 
     const SendMonthData=(getyearvalue,getMonthvalue)=>{
       console.log("getyearvalue,getMonthvalue",getyearvalue,getMonthvalue)
-      if(getyearvalue!==null && getMonthvalue !==null){
+      if(getyearvalue !==null && getMonthvalue !==null){
+        // console.log("GetInvoiceHistoryDataMonthlyData",getMonth,getyear)
         dispatch(GetInvoiceHistoryDataMonthlyData(getyearvalue,getMonthvalue))
       }
     }
    
       useEffect(()=>{
         setLoading(true)
-        dispatch(GetInvoiceHistoryDataMonthlyData())
-        // getFliternvoicedata()
+        SendMonthData()
       },[getMonthvalue])
 
       useEffect(()=>{
-        if(reducerdMonthdata && reducerdMonthdata.data){
-          setInternalinvoicehistoryMonthdata(reducerdMonthdata.data)
+        if(reducerdMonthdata){
+          setInternalinvoicehistoryMonthdata(reducerdMonthdata)
+          setFilterInvoiceData(reducerdMonthdata)
             setLoading(false)
         }
-      },[reducerdMonthdata.data])
+      },[reducerdMonthdata])
+
+      // useEffect(()=>{
+      //   if(reducerdMonthSearchdata){
+      //     setInternalinvoicehistoryMonthdata(reducerdMonthSearchdata)
+      //       setLoading(false)
+      //   }
+      // },[reducerdMonthSearchdata])
+
+
+
+
       console.log()
 
       useEffect(()=>{
-        if(reducerdata && reducerdata.data ){
-          setInovoiceInternalData(reducerdata.data)
-            setFilterInvoiceData( reducerdata.data)
+        if(search !==null){
+         dispatch( GetInvoiceHistoryDataMonthlySearchData(getyearvalue,getMonthvalue,search))
+        }
+      },[search])
+
+      useEffect(()=>{
+        if(reducerdMonthSearchdata){
+          setInternalinvoicehistoryMonthdata(reducerdMonthSearchdata)
             setLoading(false)
         }
-      },[reducerdata.data])
+      },[reducerdMonthSearchdata])
+
+    
 
 console.log("InternalinvoicehistoryMonthdata=>>>>>>>>",InternalinvoicehistoryMonthdata)
 
-      useEffect(() => {
-        const unsubscribe = navigation.addListener('blur', () => {
-          setLoading(true);
-          setFilterInvoiceData(null)
-        });
-        return unsubscribe;
-      }, [navigation, dispatch]);
 
-      useEffect(()=>{
-        getFliternvoicedata()
-      },[search])
 
       const setSearchValue = value => {
         setSearch(value);
       };
-      // console.log("searchhhhhhhhhhhhhhhhhhhhhhhhhhh",FilterInvoiceData)
+      
+  const ModalOpen=()=>{
+    setModalVisible(true)
+  }
 
-      const getFliternvoicedata=()=>{
-        const filterValue = getMonthvalue!==null?InternalinvoicehistoryMonthdata?.filter(data=>{
-          if(search.length===0){
-            return data
-          }
-          else if(
-          (  data.client_name.toLowerCase().includes(search.toLowerCase()))
-          ){
-            return data
-          }
-        }):InovoiceInternalData?.filter(data=>{
-          console.log("''''''''''''''",data)
-          if(search.length===0){
-            return data
-          }
-          else if(
-          (  data.client_name.toLowerCase().includes(search.toLowerCase()))
-          ){
-            return data
-          }
-        })
-        setFilterInvoiceData(filterValue)    
-      }
-      console.log("filtervvvvvvvvvvvvvvvvvvvvvvvvvvvvv",FilterInvoiceData)
+const Handelcancel=(data)=>{
+  console.log("onpresssssssssssssssssss","closeModal")
+  setModalVisible(false)
+  console.log(data)
+}
 
-      // console.log9("")
+const HandelSend=(data)=>{
+dispatch(SendInvoiceHistoryData(data,navigation))
+}
 
-      // console.log("invoicehistorydata",invoicehistorydata)
-      // console.log("FilterInvoiceHistory data=>>>>>>>>",FilterInvoiceData)
-      // console.log("FilterInvoiceHistory data=>>>>>>>>",FilterInvoiceData)
-          console.log("setionvoicedattaa->>>>>>>>>>>>",InovoiceInternalData)
+
+          console.log("setionvoicedattaa->>>>>>>>>>>>",FilterInvoiceData)
     return (
+      <>
+         <Modal
+       animationType="slide"
+       transparent={true}
+       visible={modalVisible}
+      >
+      <Export Onpress={Handelcancel} ondatatSend={HandelSend}/>
+    </Modal>
         <SafeAreaView style={GLOBALSTYLE.safeAreaViewStyle}>
-        <SearchBox setSearchValue={setSearchValue}/>
-        {/* { !loading && search && (
-        <View style={style.loadingContainer}>
-          <Text> purchase order Information is not found </Text>
-        </View> 
-     )}  */}
+       <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginHorizontal: 20,
+          }}>
+          <SearchBox setSearchValue={setSearchValue} />
+          <TouchableOpacity
+          onPress={()=>ModalOpen()}
+            style={{
+              flexDirection: 'column',
+              shadowColor: '#000',
+              borderRadius:10,
+              backgroundColor:COLORS.white,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1.84,
+              elevation:20
+            }}>
+            <Text
+              style={{
+                paddingHorizontal: 19,
+                paddingVertical: 19,
+                borderRadius: 10,
+                flexDirection: 'column',
+              }}>
+              <AntDesign name="export" size={25} color="black" />
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={{flexDirection:"row",justifyContent:"space-around"}}>
           <View style={{width:"45%",marginHorizontal:10}}>
@@ -243,16 +282,12 @@ console.log("InternalinvoicehistoryMonthdata=>>>>>>>>",InternalinvoicehistoryMon
           <ActivityIndicator size="large" color={COLORS.blue} />
         </View>
       )}
-        {
-          !loading && InovoiceInternalData && InovoiceInternalData.length > 0 && (
+      
             <View style={style.listContainer}>
-            <InvoiceHistoryCard data={FilterInvoiceData}/>
+            <InvoiceHistoryCard data={InternalinvoicehistoryMonthdata}/>
             </View>
-          )
-        }
-        
-        {/* </View> */}
         </SafeAreaView>
+        </>
     );
 };
 

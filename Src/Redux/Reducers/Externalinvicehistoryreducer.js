@@ -3,7 +3,11 @@ import {
     EXTERNALINVOICEHISTORY_SUCCESS,
     EXTERNALINVOICEHISTORY_FAIL,
     EXTERNALINVOICEHISTORYMONTHDATA_FAIL,
-    EXTERNALINVOICEHISTORYMONTHDATA_SUCCESS,EXTERNALINVOICEHISTORYMONTHDATA_PROGRESS
+    EXTERNALINVOICEHISTORYMONTHDATA_SUCCESS,
+    EXTERNALINVOICEHISTORYMONTHDATA_PROGRESS,
+    EXTERNALINVOICEHISTORYMAILEXPORT_FAIL,
+    EXTERNALINVOICEHISTORYMAILEXPORT_SUCCESS,
+    EXTERNALINVOICEHISTORYMAILEXPORT_PROGRESS
 } from "../ActionConstant"
 
 
@@ -11,7 +15,8 @@ import {
 const initialstate={
     isLoading: false,
     getExternalinvicehistorydata:{},
-    GetMonthData:{}
+    GetMonthData:{},
+    addExternalIvoiceHistory:{}
 }
 
   const Externalinvicehistoryreducer=(state=initialstate,action)=>{
@@ -47,6 +52,21 @@ const initialstate={
                                     ...state,
                                     GetMonthData:action.payload
                                 };
+                                case  EXTERNALINVOICEHISTORYMAILEXPORT_PROGRESS:
+                                    return {
+                                        ...state,
+                                      isLoading:true
+                                    };
+                                    case EXTERNALINVOICEHISTORYMAILEXPORT_SUCCESS:
+                                        return {
+                                            ...state,
+                                            addExternalIvoiceHistory:action.payload
+                                        };
+                                        case  EXTERNALINVOICEHISTORYMAILEXPORT_FAIL:
+                                            return {
+                                                ...state,
+                                                addExternalIvoiceHistory:action.payload
+                                            };
                     default:
                         return state;            
     }

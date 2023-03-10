@@ -12,88 +12,157 @@ import {GLOBALSTYLE} from '../../../../Constants/Styles';
 import {COLORS} from '../../../../Constants/Theme';
 import dayjs from 'dayjs';
 import CheckBox from '@react-native-community/checkbox';
+import { ActivityIndicator } from 'react-native';
 
 function InvoiceStatuCard({data}) {
-  // console.log('dattttttttttttttt', data);
+  console.log('dattttttttttttttt', data);
   const [getstatus, setgetStatus] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [MonthWords,setMonthWords]=useState([])
+  const[Loading,setLoading]=useState(true)
   const [Month, setMonth] = useState([]);
   const [Year, setYear] = useState([]);
 
-  const getDestructuredData = () => {
-    const newdata1 = [];
-    for (const key in data) {
-      for (let i = 0; i < key.length; i++) {
-        if (data[key][i]) {
-          let newdata = {
-            client_id: data[key][i].client_id,
-            client_name: data[key][i].client_name,
-            payment: data[key][i].payment,
-            invoice: data[key][i].invoice,
-            count: data[key][i].count,
-          };
-          newdata1.push(newdata);
+  // const getDestructuredData = () => {
+  //   const newdata1 = [];
+  //   for (const key in data) {
+  //     for (let i = 0; i < key.length; i++) {
+  //       // for (let j = 0 ;j<key.length ;j++){
+  //         // console.log("data=====",data[key][i].client_name == data[key][j].client_name ? 0:data[key][j].count)
+  //         if (data[key][i]) {
+  //           // console.log("data=====",data[key][i].client_name !==data[key][i].client_name ? 0:data[key][i].count)
+  //           let newdata = {
+  //             client_id: data[key][i].client_id,
+  //             client_name: data[key][i].client_name,
+  //             payment: data[key][i].payment,
+  //             invoice: data[key][i].invoice,
+  //             count: data[key][i].count
+  //           };
+  //           newdata1.push(newdata);
+  //         // }
+  //       }
+       
+  //     }
+  //   }
+  //   console.log("newdata1.count=============",newdata1)
+  //   setgetStatus(newdata1);
+  // };
+
+  const getDestructuredData =()=>{
+  //  for (const key in data){
+  //   let flag =false;
+  //   let newdata =[]
+  //   //  console.log("iiiiiiiiiiiiiiiii",key,"check",data[key].client_id == data[key].client_id)
+  //    for( let i of data[key]){
+  //     console.log("iiiiiiiiiiiiiiiii",key,"check",i.client_id ,"==",i.client_id)
+  
+
+  //    }
+
+  //  }
+  data
+  let clientObj = {}
+
+
+  
+  let valueObj =  {
+    march : { payment : 0 , count : 0, invoice : 0  },
+    feb: { payment : 0 , count : 0, invoice : 0  },
+    jan : { payment : 0 , count : 0, invoice : 0  },
+    dec : { payment : 0 , count : 0, invoice : 0  }
+  }
+  
+
+  for(let ele in data){
+    // console.log(data[ele])
+    for(let i of data[ele]){
+      clientObj[i.client_id] = valueObj
+
+      console.log(data[ele],"Prinitng only values from all array")
+      let mapEle = data[ele].map(ele=>ele.client_id && ele.payment)
+      // console.log(mapEle,"Mapped Elelment")
+
+      if(mapEle.includes(i.client_id)){
+
+        // console.log(true);
+
+        for(let j in clientObj){
+          // console.log(clientObj[j],"Printing My payment")
+
         }
       }
+      
     }
-    setgetStatus(newdata1);
-  };
+  }
+  // console.log(clientObj,'Printing My Obj')
+
+  // for(let ele in clientObj){
+  //   for(let i of data[ele])
+  // }
+  }
 
   useEffect(() => {
-    getDestructuredData();
-    getMonth()
-    MonthYear(MonthWords)
+   setLoading(true)
+      getDestructuredData();
+      getMonth(MonthWords)
+      // MonthYear(MonthWords)
+      setLoading(false)
   }, [data]);
 
+  
+ 
+
   // console.log('getstatus=>>>>>>>>>>>>>>>>>>>>>>>>>>>>', getstatus);
-  const currentDate = dayjs();
-  const MonthYear = (month) => {
-    // console.log("month=??????????????????",month)
-    let Montharray=[]
-    for (let i = 0; i <month.length; i++) {
-      // console.log("mmmmmmmmmmmmmmmmmmmmmm",month[i].month-1)
-      const prevMonth = currentDate.month(month[i].month-1);
-      // console.log("prevMonth===============",prevMonth)
-      const monthName = prevMonth.format('MMMM'); 
-      // console.log("monthName=>>>>>>>>>>>>>>>>>>>>>>>>",monthName)
-      Montharray.push(monthName)
-    }
-    setMonth(Montharray);
-  };
+ 
+  // const MonthYear = (month) => {
+  //   // console.log("month=??????????????????",month)
+  //   let Montharray=[]
+  //   for (let i = 0; i <month.length; i++) {
+  //     // console.log("mmmmmmmmmmmmmmmmmmmmmm",month[i].month-1)
+  //     const prevMonth = currentDate.month(month[i].month-1);
+  //     // console.log("prevMonth===============",prevMonth)
+  //     const monthName = prevMonth.format('MMMM'); 
+  //     // console.log("monthName=>>>>>>>>>>>>>>>>>>>>>>>>",monthName)
+  //     Montharray.push(monthName)
+  //   }
+  //   setMonth(Montharray);
+  // };
 
  
 
   // console.log("montharrrrrrrrrrrrrr",Month)
-
+  const currentDate = dayjs();
   const getMonth =()=>{
-    const MonthinWords=[]
+    const Montharray=[]
    for (const key in data){
     let year =key.toString().split("").splice(0,4).join("")
     let month =key.toString().split("").splice(5,7).join("")
-    let item ={ "month":month,'year':year}
-    MonthinWords.push(item)
+    let item =[{ "month":month,'year':year}]
+    console.log("ITEMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMuhyhgggggggggggg",item)
+    for(let i =0 ; i<item.length ;i++){
+console.log("item.month=============",)
+const prevMonth = currentDate.month(item[i].month-1);
+console.log("prevMonth>",prevMonth)
+const monthName = prevMonth.format('MMMM');
+let Year=item[i].year
+let CurrentMonth={"month":monthName,"Year":Year} 
+Montharray.push(CurrentMonth)
+    }
    }
-   setMonthWords(MonthinWords)
+setMonthWords(Montharray)
   }
-
-  // console.log("monthwodddddddddddddddddddddd",MonthWords[0].year)
+  // console.log("MonthWoooooooooooooooooooooooooooooo",MonthWords[0].Year)
 
   const handelModal = () => {
     setShowModal(true);
   };
 
   const _renderItem = ({item}) => {
-    // const handleOptionSelect=(option)=>{
-    //   setisSelected(true)
-    //   setSelectedOption(option)
-    //   setShowModal(false)
-    // }
-    // console.log('item=>>>>>>>>>>>>>>>>>>>>>..........................', item);
+    console.log('item=>>>>>>>>>>>>>>>>>>>>>..........................', item.client_name,"==",item.count,item.year);
     return (
       <>
         <View style={[GLOBALSTYLE.cardView]}>
-          <View style={GLOBALSTYLE.columnView}>
+        <View style={GLOBALSTYLE.columnView}>
             <Text
               style={[
                 GLOBALSTYLE.rowView,
@@ -121,7 +190,7 @@ function InvoiceStatuCard({data}) {
                 elevation:2,
               }}>
              <Text style={[GLOBALSTYLE.text, {textAlign: 'center',fontWeight:"400"}]}>
-                {Month[0]}{MonthWords[0].year}
+              {/* {MonthWords[0].month}{MonthWords[0].Year} */} {item.year}
               </Text>
               <View style={[GLOBALSTYLE.rowView, {marginHorizontal: 20}]}>
                 <View style={{marginTop: 10}}>
@@ -159,7 +228,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={[GLOBALSTYLE.text]}>pay</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.payment==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -168,7 +237,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={[GLOBALSTYLE.text]}>Inv</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.invoice==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -177,7 +246,7 @@ function InvoiceStatuCard({data}) {
                 </View>
               </View>
             </View>
-            <View
+            {/* <View
                style={{
                 marginTop: 20,
                borderBottomWidth:1,
@@ -197,7 +266,7 @@ function InvoiceStatuCard({data}) {
                 elevation:2,
               }}>
             <Text style={[GLOBALSTYLE.text, {textAlign: 'center',fontWeight:"400"}]}>
-              {Month[1]}{MonthWords[1].year}
+            {MonthWords[1].month}{MonthWords[1].Year}
               </Text>
               <View style={[GLOBALSTYLE.rowView, {marginHorizontal: 20}]}>
                 <View style={{marginTop: 10}}>
@@ -206,7 +275,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={[GLOBALSTYLE.text]}>pay</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.payment==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -215,7 +284,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={[GLOBALSTYLE.text]}>Inv</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.invoice==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -223,7 +292,7 @@ function InvoiceStatuCard({data}) {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
+            </View> */}
             <View
                style={{
                 marginTop: 20,
@@ -243,7 +312,7 @@ function InvoiceStatuCard({data}) {
                 elevation:2,
               }}>
               <Text style={[GLOBALSTYLE.text, {textAlign: 'center',fontWeight:"400"}]}>
-              {Month[2]}{MonthWords[2].year}
+              {/* {MonthWords[2].month}{MonthWords[2].Year} */} {item.year}
               </Text>
               <View style={[GLOBALSTYLE.rowView, {marginHorizontal: 20}]}>
                 <View style={{marginTop: 10}}>
@@ -252,7 +321,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={GLOBALSTYLE.text}>pay</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.payment==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -261,7 +330,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={GLOBALSTYLE.text}>Inv</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.invoice==1 ?"yellow":"teal"}]} >
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -289,7 +358,7 @@ function InvoiceStatuCard({data}) {
                 elevation:2,
               }}>
               <Text style={[GLOBALSTYLE.text, {textAlign: 'center',fontWeight:"400"}]}>
-              {Month[3]}{MonthWords[3].year}
+              {MonthWords[3].month}{MonthWords[3].Year}
               </Text>
               <View style={[GLOBALSTYLE.rowView, {marginHorizontal: 20}]}>
                 <View style={{marginTop: 10}}>
@@ -298,7 +367,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={GLOBALSTYLE.text}>pay</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.payment==1 ?"yellow":"teal"}]}>
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}
@@ -307,7 +376,7 @@ function InvoiceStatuCard({data}) {
                 </View>
                 <View>
                   <Text style={GLOBALSTYLE.text}>Inv</Text>
-                  <TouchableOpacity style={styles.CheckBox1}>
+                  <TouchableOpacity style={[styles.CheckBox1,{backgroundColor:item.invoice==1 ?"yellow":"teal"}]} >
                     <Image
                       source={require('../../../../Components/tick.png')}
                       style={{width: 20}}

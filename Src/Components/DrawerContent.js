@@ -84,7 +84,7 @@ const CustomDrawer = props => {
                                 <CustomDrawerItem
                                     navigation={props.navigation}
                                     title="External Project Invoice Status"
-                                    route={'External Invoice Status'}
+                                    route={'External Project Invoice Status'}
                                 />
                                 <CustomDrawerItem
                                     navigation={props.navigation}

@@ -17,6 +17,7 @@ import RequestClientReducer from './RequestClientReducer';
 import InvoiceStatusReducer from './InvoiceStatusReducer';
 import InvoiceHistoryReducer from './InvoiceHistoryReducer';
 import Externalinvicehistoryreducer from './Externalinvicehistoryreducer';
+import ExternalInvoiceStatusReducer from './ExternalInvoiceStatusReducer';
 
 const rootReducer = combineReducers({
   loginReducer: loginReducer,
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
 RequestClientReducer:RequestClientReducer ,
 InvoiceStatusReducer:InvoiceStatusReducer,
 InvoiceHistoryReducer:InvoiceHistoryReducer,
-Externalinvicehistoryreducer:Externalinvicehistoryreducer
+Externalinvicehistoryreducer:Externalinvicehistoryreducer,
+ExternalInvoiceStatusReducer:ExternalInvoiceStatusReducer
 });
 export default rootReducer;

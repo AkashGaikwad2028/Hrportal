@@ -13,6 +13,8 @@ import {COLORS} from '../../../Constants/Theme';
 function InvoiceHistoryCard({data, navigation}) {
   const [checked, setChecked] = useState(false);
 
+console.log("datattttttttttttttogettttttttttttttttt",data)
+
   const _renderItem = ({item}) => {
     console.log('item=>>>>>>>>>>>>>>>>>>>>>0000000000000000000000000', item);
 
@@ -186,7 +188,7 @@ function InvoiceHistoryCard({data, navigation}) {
       <FlatList
         data={data}
         renderItem={_renderItem}
-        keyExtractor={item => item.client_id}
+        // keyExtractor={item => item.client_id}
         edit
       />
     </View>

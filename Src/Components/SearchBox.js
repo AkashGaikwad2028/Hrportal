@@ -17,6 +17,7 @@ const SearchBox = props => {
         backgroundColor: COLORS.white,
         borderRadius: 10,
         marginHorizontal: 15,
+        width:"80%"
       }}>
       <Feather
         name="search"

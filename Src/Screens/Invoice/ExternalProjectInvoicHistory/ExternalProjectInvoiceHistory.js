@@ -4,8 +4,10 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    TouchableOpacity,Dimensions
+    TouchableOpacity,Dimensions,
+    Modal
 } from "react-native";
+import Export from "../Export";
 import SearchBox from "../../../Components/SearchBox";
 import { COLORS } from "../../../Constants/Theme";
 import InvoiceHistoryCard from "../InvoiceHistory/InvoiceHistoryCard";
@@ -13,8 +15,9 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import DropDownPicker from "react-native-dropdown-picker";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { GLOBALSTYLE } from "../../../Constants/Styles";
-import {GetExternalInvoiceHistory, getExternalInvoiceMonthlyData} from "../../../Redux/Actions/ExternalProjectInvoiceHistory"
+import {GetExternalInvoiceHistory, getExternalInvoiceMonthlyData,SendExternalInvoiceHistoryData} from "../../../Redux/Actions/ExternalProjectInvoiceHistory"
 import { ActivityIndicator } from "react-native";
 
 
@@ -25,7 +28,7 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
     const reducerdata=useSelector(state=>state.Externalinvicehistoryreducer.getExternalinvicehistorydata)
     const reducerdata1=useSelector(state=>state.Externalinvicehistoryreducer.GetMonthData)
     console.log("reducerExternalInvoicedataMonthly Data=>>>>>>",reducerdata1)
-    // console.log("reducerExternalInvoicedata=>>>>>>",reducerdata.data)
+    const [modalVisible, setModalVisible] = useState(false)  
     const [openYear,setOpenyear]=useState(false)
     const [getyearvalue,setGetYearvalue]=useState(null)
     const [getyearitem,setgetyearitem]=useState([])
@@ -43,7 +46,7 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
     const GetYears=()=>{
        const years =new Date().getFullYear()
        const year= []
-       for(let i =years ; i>=1900 ; i--){
+       for(let i =years ; i>=2000 ; i--){
         // console.log("iiiiiiiiiiiiiiiiii",i)
        let item = { value:i};
         year.push(item)
@@ -95,11 +98,11 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
 
 
     useEffect(() => {
-        // const unSubscribe = navigation.addListener('focus', () => {
+        const unSubscribe = navigation.addListener('focus', () => {
           setLoading(true)
             dispatch(GetExternalInvoiceHistory())
-        // });
-        // return unSubscribe;
+        });
+        return unSubscribe;
       }, [navigation]);
 
       useEffect(()=>{
@@ -159,13 +162,69 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
         setExternalFilterInvoiceData(filterValue)
       }
 
+           
+  const ModalOpen=()=>{
+    setModalVisible(true)
+  }
+
+const Handelcancel=(data)=>{
+  console.log("onpresssssssssssssssssss","closeModal")
+  setModalVisible(false)
+  console.log(data)
+}
+
+const HandelSend=(data)=>{
+dispatch(SendExternalInvoiceHistoryData(data,navigation))
+}
+
       // console.log(" getMonthvalue!==null?Externalinvoicehistorydata :ExternalinvoicehistoryMonthdata", 
       //  getMonthvalue.length!==null?ExternalinvoicehistoryMonthdata:Externalinvoicehistorydata)
     return (
-
+<>
+<Modal
+       animationType="slide"
+       transparent={true}
+       visible={modalVisible}
+      >
+      <Export Onpress={Handelcancel} ondatatSend={HandelSend}/>
+    </Modal>
         <SafeAreaView style={GLOBALSTYLE.safeAreaViewStyle}>
             {/* <View style={styles.container}> */}
-        <SearchBox setSearchValue={setSearchValue}/>
+            <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginHorizontal: 20,
+          }}>
+          <SearchBox setSearchValue={setSearchValue} />
+          <TouchableOpacity
+          onPress={()=>ModalOpen()}
+            style={{
+              flexDirection: 'column',
+              shadowColor: '#000',
+              borderRadius:10,
+              backgroundColor:COLORS.white,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1.84,
+              elevation:20
+            }}>
+            <Text
+              style={{
+                paddingHorizontal: 19,
+                paddingVertical: 19,
+                borderRadius: 10,
+                flexDirection: 'column',
+              }}>
+              <AntDesign name="export" size={25} color="black" />
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         { !loading && search && (
         <View style={style.loadingContainer}>
           <Text> purchase order Information is not found </Text>
@@ -244,6 +303,7 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
         
          {/* </View>  */}
         </SafeAreaView>
+        </>
     );
 };
 

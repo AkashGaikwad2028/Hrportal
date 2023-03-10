@@ -59,7 +59,7 @@ function privateStack() {
       <privatestack.Screen name="InvoiceStatus" component={InvoiceStatus} />
       <privatestack.Screen name="InvoiceHistory" component={InvoiceHistory} />
       <privatestack.Screen
-        name="ExternalProjectInvoiceStatus"
+        name="External Project Invoice Status"
         component={ExternalProjectInvoiceStatus}
       />
       <privatestack.Screen

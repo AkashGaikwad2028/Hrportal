@@ -4,7 +4,10 @@ import{
     EXTERNALINVOICEHISTORY_SUCCESS,
     EXTERNALINVOICEHISTORYMONTHDATA_FAIL, 
     EXTERNALINVOICEHISTORYMONTHDATA_PROGRESS, 
-    EXTERNALINVOICEHISTORYMONTHDATA_SUCCESS
+    EXTERNALINVOICEHISTORYMONTHDATA_SUCCESS,
+    EXTERNALINVOICEHISTORYMAILEXPORT_FAIL,
+    EXTERNALINVOICEHISTORYMAILEXPORT_PROGRESS,
+    EXTERNALINVOICEHISTORYMAILEXPORT_SUCCESS
 } from "../ActionConstant"
 
 import request from "../../Util/request"
@@ -51,6 +54,36 @@ export function getExternalInvoiceMonthlyData(MonthData) {
     }
 }
 
+
+ 
+export function SendExternalInvoiceHistoryData(data) {
+    console.log("datattttttttttttttttttttttttttt",data)
+    let datas={
+      email:data.email,
+      months:data.months,
+    }
+      return async dispatch => {
+          dispatch(EXTERNALInvoiceHistory({}, EXTERNALINVOICEHISTORYMAILEXPORT_PROGRESS))
+          console.log("Form data",datas)
+          
+          try {
+              const data = await request({
+                  url: `/internal-invoice-history/export`,
+                  method:'POST',
+                  data:datas,
+              });
+              console.log('updateEDITURCHASEORDER response', data.data);
+              if (data.message) {
+                  dispatch(EXTERNALInvoiceHistory(data, EXTERNALINVOICEHISTORYMAILEXPORT_SUCCESS));
+              }
+              Toast.show("Internal Invoice Details Sent Successfully")
+          } catch (err) {
+              console.log('updateVendor error', err.data);
+              dispatch(EXTERNALInvoiceHistory(err,EXTERNALINVOICEHISTORYMAILEXPORT_FAIL,));
+              Toast.show('EDITURCHASEORDER Not Updated Successfully');
+          }
+      }
+    }
 
 
 
