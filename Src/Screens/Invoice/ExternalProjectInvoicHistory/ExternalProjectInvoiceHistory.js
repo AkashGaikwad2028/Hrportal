@@ -83,10 +83,18 @@ const ExternalProjectInvoiceHistory = ({ navigation }) => {
         Getmonth()
        
     },[])
+
+    
+   
+  
+
+  //  console.log("currentMonth",currentMonth,getMonthValue)
+ 
   
   const SendMonthData=(getyearvalue,getMonthvalue)=>{
       console.log("getyearvalue=>>>>>>>>>>",getyearvalue)
       // console.log("getMonthvalue=>>>>>>>>>>",getMonthvalue.length)
+    
       const MonthData={
           "month" : getMonthvalue,
           "year" : getyearvalue
@@ -216,8 +224,8 @@ dispatch(SendExternalInvoiceHistoryData(data,navigation))
             <Text
               style={{
                 paddingHorizontal: 19,
-                paddingVertical: 19,
-                borderRadius: 10,
+                paddingVertical: 30,
+                borderRadius: 19,
                 flexDirection: 'column',
               }}>
               <AntDesign name="export" size={25} color="black" />
@@ -319,12 +327,12 @@ const style = StyleSheet.create({
       alignSelf: 'center',
       borderColor: '#fff',
       zIndex:100,
-      width:"100%",
-      padding:50
+      // width:"100%",
+      // padding:50
     },
     dropDownContainerStyle: {
-      width:"100%",
-      marginVertical: 10,
+      // width:"100%",
+      marginVertical: 19,
       // marginHorizontal:85,
       paddingVertical: 4,
       borderColor: '#fff',

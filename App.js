@@ -11,7 +11,7 @@ import { LogBox } from 'react-native';
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 LogBox.ignoreLogs(["Got a component with the name"])
-
+  
 const App = () => {
   return (
     <Provider store={store}>

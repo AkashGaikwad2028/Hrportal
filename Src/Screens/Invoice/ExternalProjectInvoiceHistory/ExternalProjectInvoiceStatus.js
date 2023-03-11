@@ -32,12 +32,6 @@ const ExternalProjectInvoiceStatus = ({navigation}) => {
     state => state.ExternalInvoiceStatusReducer.ExternalInvoiceStautsSearchData,
   );
 
-//   const emailExportreducer=useSelector(
-//     state=>state.InvoiceStatusReducer.invoicestatusAdd
-//   )
-  // console.log('reducerdatata=>>>>>>>>>>', reducerData);
-  // console.log('searchReducerData=============',searchReducerData)
-
   useEffect(() => {
     const unSubscribe = navigation.addListener('focus', () => {
       setLoading(true);
